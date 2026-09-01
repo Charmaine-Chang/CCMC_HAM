@@ -160,6 +160,54 @@ Data created during the test can be cleaned up with `scripts/cleanup_smoke.sql`,
 
 ---
 
+## Deployment (Free Tier)
+
+The app is a standard Flask + MySQL application that reads all configuration from
+environment variables (`DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, `DB_NAME`, and
+optional `DB_SSL` / `DB_SSL_CA`), so it can be deployed to any container host.
+
+### 1. Database - TiDB Cloud Serverless (free, MySQL-compatible)
+
+1. Sign up at https://tidbcloud.com (GitHub / Google login) and create a **Serverless** cluster.
+2. In the cluster console, create a database user (or use the default `root`) and download the **CA certificate**.
+3. Note the connection details: host (e.g. `gateway01.ap-southeast-1.prod.aws.tidbcloud.com`), port `4000`, username, and password.
+
+### 2. App - Render (free web service)
+
+1. Sign up at https://render.com using **GitHub** login.
+2. **New - Blueprint** - select this repository. Render reads `render.yaml` and creates the service.
+3. Fill in the secret environment variables (or set them in the service's **Environment** tab after creation).
+
+| Variable | Example | Notes |
+|---|---|---|
+| `DB_HOST` | `gateway01.ap-southeast-1.prod.aws.tidbcloud.com` | TiDB Serverless host |
+| `DB_PORT` | `4000` | TiDB Serverless port |
+| `DB_NAME` | `ccmc_ham` | Database name |
+| `DB_USER` | `root` | Database user |
+| `DB_PASSWORD` | `******` | Database password |
+| `DB_SSL` | `1` | Enable TLS |
+| `DB_SSL_CA` | `/etc/ssl/certs/ca.pem` | Path to the CA certificate inside the container |
+
+### 3. Import schema and seed data
+
+Run the setup script from your machine against the remote database (it reads the same env vars):
+
+```bash
+DB_USER=root DB_PASSWORD=your-password DB_HOST=your-host DB_PORT=4000 DB_NAME=ccmc_ham \
+DB_SSL=1 DB_SSL_CA=/path/to/ca.pem python scripts/setup_db.py
+```
+
+On Windows PowerShell:
+
+```powershell
+$env:DB_USER='root'; $env:DB_PASSWORD='your-password'; $env:DB_HOST='your-host'
+$env:DB_PORT='4000'; $env:DB_NAME='ccmc_ham'; $env:DB_SSL='1'; $env:DB_SSL_CA='C:\path\to\ca.pem'
+python scripts/setup_db.py
+```
+
+> On the free Render tier the service sleeps after ~15 minutes of inactivity and wakes on the next visit, so the first load may take 30-60 seconds.
+
+---
 ## Directory Structure
 
 ```

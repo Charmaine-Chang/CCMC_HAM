@@ -1,0 +1,31 @@
+# Render Blueprint (https://render.com/docs/blueprint-spec)
+# 1. Push this repository to GitHub.
+# 2. In Render: New -> Blueprint -> connect this repo.
+# 3. Fill in the secret values (DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_SSL_CA)
+#    or set them in the service's Environment tab after creation.
+services:
+  - type: web
+    name: ccmc-ham
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    startCommand: gunicorn --bind 0.0.0.0:${PORT:-8000} app:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: FLASK_DEBUG
+        value: "0"
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "4000"
+      - key: DB_NAME
+        sync: false
+      - key: DB_SSL
+        value: "1"
+      - key: DB_SSL_CA
+        sync: false

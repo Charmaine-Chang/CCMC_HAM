@@ -28,14 +28,20 @@ def run_sql_file(conn, path):
 
 
 def main():
-    conn = pymysql.connect(
-        host=HOST,
-        port=PORT,
-        user=USER,
-        password=PASSWORD,
-        charset='utf8mb4',
-        client_flag=pymysql.constants.CLIENT.MULTI_STATEMENTS,
-    )
+    conn_kwargs = {
+        'host': HOST,
+        'port': PORT,
+        'user': USER,
+        'password': PASSWORD,
+        'charset': 'utf8mb4',
+        'client_flag': pymysql.constants.CLIENT.MULTI_STATEMENTS,
+    }
+    ca_path = os.environ.get('DB_SSL_CA')
+    if ca_path:
+        conn_kwargs['ssl'] = {'ca': ca_path}
+    elif os.environ.get('DB_SSL') == '1':
+        conn_kwargs['ssl'] = {}
+    conn = pymysql.connect(**conn_kwargs)
     try:
         with conn.cursor() as cur:
             cur.execute(
