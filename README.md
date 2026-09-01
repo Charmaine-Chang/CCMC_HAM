@@ -18,7 +18,7 @@ A full-stack church management platform built with **Flask + MySQL**. It covers 
 - **Full-stack Flask application** with 14 feature modules organised as Blueprints (auth, dashboard, events, announcements, prayer, visitors, attendance, rosters, fellowships, resources, reports, admin).
 - **Custom RBAC** with 4 roles (System Admin / Deacon / Service Staff / Member), enforced server-side by reusable decorators.
 - **Bilingual UI** (Traditional Chinese / English) powered by Flask-Babel, with automatic language detection and per-user language persistence.
-- **Automated smoke test** covering public pages, role permissions, and CRUD flows; runs in **GitHub Actions CI** against a MySQL 8.0 service container.
+- **Automated testing**: 26 pytest tests plus a full-page smoke test covering public pages, role permissions, and CRUD flows; both run in **GitHub Actions CI** against a MySQL 8.0 service container.
 - **12-factor friendly configuration**: database settings and secrets are read from environment variables, with a gitignored local override file (`connect_local.py`) and a committed example template.
 - **Clean, dependency-pinned** `requirements.txt`, MIT-licensed.
 
@@ -152,7 +152,8 @@ Open http://127.0.0.1:5005
 ## Verification
 
 ```bash
-python scripts/smoke_test.py    # Smoke test: public pages + role permissions + CRUD flows
+python -m pytest tests -v             # Unit / integration tests (uses a dedicated ccmc_ham_test database)
+python scripts/smoke_test.py          # Smoke test: public pages + role permissions + CRUD flows
 ```
 
 Data created during the test can be cleaned up with `scripts/cleanup_smoke.sql`, or you can simply re-import the seed data to restore the initial state. The same smoke test runs automatically in GitHub Actions on every push to `main` and on pull requests.

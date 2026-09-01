@@ -36,10 +36,13 @@ jobs:
           python-version: '3.13'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements-dev.txt
 
       - name: Create database and import schema + seed data
         run: python scripts/setup_db.py
+
+      - name: Run pytest
+        run: python -m pytest tests -v
 
       - name: Run smoke test
         run: python scripts/smoke_test.py
