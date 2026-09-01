@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ t('my_roster_title') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h3 class="section-title mb-4"><i class="bi bi-person-check me-2 text-forest"></i>{{ t('my_roster_title') }}</h3>
+    <div class="row g-4">
+        {% for r in rosters %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="mb-0">{{ r.task_name }}</h5>
+                        <span class="badge {{ 'bg-success' if r.status == 'confirmed' else 'bg-warning text-dark' if r.status == 'pending' else 'bg-secondary' }}">{{ roster_status_label(r.status) }}</span>
+                    </div>
+                    <p class="text-muted small mb-1"><i class="bi bi-calendar me-1"></i>{{ r.service_date | date_only }}</p>
+                    {% if r.event_title %}<p class="text-muted small mb-1"><i class="bi bi-bookmark me-1"></i>{{ get_i18n_text(r, 'event_title') }}</p>{% endif %}
+                    {% if r.group_name %}<p class="text-muted small mb-0"><i class="bi bi-people me-1"></i>{{ get_i18n_text(r, 'group_name') }}</p>{% endif %}
+                    <div class="mt-3">
+                        <form method="POST" action="{{ url_for('rosters.update_status', roster_id=r.roster_id) }}" class="d-flex gap-2">
+                            <select name="status" class="form-select form-select-sm">
+                                {% for value, label in statuses %}
+                                <option value="{{ value }}" {{ 'selected' if r.status == value }}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-sm btn-outline-forest rounded-pill">{{ t('update') }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center text-muted py-5">{{ t('no_my_rosters') }}</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

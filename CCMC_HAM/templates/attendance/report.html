@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ t('attendance_report_title') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h3 class="section-title mb-4"><i class="bi bi-graph-up me-2 text-forest"></i>{{ t('attendance_report_title') }}</h3>
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white"><h5 class="mb-0">{{ t('by_date') }}</h5></div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light"><tr><th>{{ t('date') }}</th><th>{{ t('attendance_count') }}</th><th>{{ t('participating_activities') }}</th></tr></thead>
+                        <tbody>
+                            {% for d in daily %}
+                            <tr>
+                                <td>{{ d.service_date | date_only }}</td>
+                                <td><span class="badge bg-forest">{{ d.count }} {{ t('people_unit') }}</span></td>
+                                <td class="text-muted">{{ d.events_used }}</td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="3" class="text-center text-muted py-4">{{ t('no_data') }}</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white"><h5 class="mb-0">{{ t('by_activity') }}</h5></div>
+                <div class="card-body">
+                    {% for e in by_event %}
+                    <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                        <span>{{ e.title }}</span>
+                        <span class="badge bg-light text-dark border">{{ e.count }} {{ t('people_times') }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-muted mb-0">{{ t('no_data') }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

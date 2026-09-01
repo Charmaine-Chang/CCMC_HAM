@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{{ t('roster_form_title') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-4" style="max-width: 760px;">
+    <h3 class="section-title mb-4"><i class="bi bi-list-check me-2 text-forest"></i>{{ t('roster_form_title') }}</h3>
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4 p-lg-5">
+            <form method="POST">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">{{ t('task_name') }} <span class="text-danger">*</span></label>
+                        <input type="text" name="task_name" class="form-control" placeholder="e.g. Usher, Pianist, Reader, Sound, Projection" required list="taskList">
+                        <datalist id="taskList">
+                            <option>Usher</option><option>Pianist</option><option>Reader</option><option>Sound</option><option>Projection</option>
+                            <option>Children Sunday School Teacher</option><option>Junior Sunday School Teacher</option><option>Prayer Meeting Leader</option>
+                        </datalist>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ t('service_date') }} <span class="text-danger">*</span></label>
+                        <input type="date" name="service_date" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ t('service_person') }} <span class="text-danger">*</span></label>
+                        <select name="user_id" class="form-select" required>
+                            <option value="">{{ t('optional') }}…</option>
+                            {% for u in users %}
+                            <option value="{{ u.user_id }}">{{ u.first_name or '' }}{{ u.last_name or '' }} (@{{ u.username }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ t('event_optional') }}</label>
+                        <select name="event_id" class="form-select">
+                            <option value="">{{ t('no_event') }}</option>
+                            {% for ev in events %}
+                            <option value="{{ ev.event_id }}">{{ get_i18n_text(ev, 'title') }} ({{ ev.start_time.strftime('%m-%d') }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ t('group_optional') }}</label>
+                        <select name="group_id" class="form-select">
+                            <option value="">{{ t('no_group') }}</option>
+                            {% for g in groups %}
+                            <option value="{{ g.group_id }}">{{ get_i18n_text(g, 'group_name') }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ t('notes') }}</label>
+                        <input type="text" name="notes" class="form-control" placeholder="{{ t('notes_placeholder') }}">
+                    </div>
+                </div>
+                <button class="btn btn-forest rounded-pill px-4">{{ t('save') }}</button>
+                <a href="{{ url_for('rosters.index') }}" class="btn btn-outline-secondary rounded-pill px-4">{{ t('cancel') }}</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

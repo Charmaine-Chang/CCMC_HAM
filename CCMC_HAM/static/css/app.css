@@ -1,0 +1,555 @@
+/* ============================================================
+   CCMC Hamilton 教会管理系统 - 样式
+   ============================================================ */
+:root {
+    --forest: #1f3a2d;
+    --forest-dark: #162b21;
+    --forest-light: #eaf1ec;
+    --gold: #c9a227;
+    --gold-light: #e7c766;
+    --cream: #faf7f0;
+    --ink: #23272b;
+    --muted: #6b7280;
+}
+
+html, body {
+    min-height: 100vh;
+    font-family: 'Noto Sans TC', 'Noto Serif TC', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+}
+
+.ccmc-navbar {
+    background: var(--forest-dark);
+    box-shadow: 0 2px 14px rgba(0,0,0,.25);
+}
+.ccmc-navbar .navbar-brand { color: #fff; }
+.brand-text { line-height: 1.15; font-size: .95rem; }
+.brand-sub { font-size: .62rem; color: rgba(255,255,255,.65); letter-spacing: .4px; }
+.ccmc-navbar .nav-link { color: rgba(255,255,255,.82); font-weight: 500; padding: .55rem .8rem; border-radius: 8px; }
+.ccmc-navbar .nav-link:hover, .ccmc-navbar .nav-link.active { color: var(--gold-light); background: rgba(255,255,255,.07); }
+.ccmc-navbar .dropdown-menu { border: 0; box-shadow: 0 12px 32px rgba(0,0,0,.18); border-radius: 12px; }
+.ccmc-navbar .dropdown-item { border-radius: 8px; margin: 2px 8px; padding: 8px 12px; font-size: .9rem; }
+.ccmc-navbar .dropdown-item:hover { background: var(--forest-light); color: var(--forest); }
+
+.user-chip {
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    border: 0;
+    border-radius: 40px;
+    padding: 5px 14px 5px 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.user-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+.role-badge {
+    font-size: .68rem;
+    background: rgba(255,255,255,.15);
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+.btn-gold { background: var(--gold); color: #fff; border: 0; }
+.btn-gold:hover { background: var(--gold-light); color: #fff; }
+.btn-forest { background: var(--forest); color: #fff; border: 0; }
+.btn-forest:hover { background: var(--forest-dark); color: #fff; }
+.btn-outline-forest { color: var(--forest); border: 1px solid var(--forest); }
+.btn-outline-forest:hover { background: var(--forest); color: #fff; }
+.text-forest { color: var(--forest) !important; }
+.bg-forest { background-color: var(--forest) !important; }
+
+.section-title { font-family: 'Noto Serif TC', serif; font-weight: 700; color: var(--forest-dark); }
+.section-heading .section-title { font-size: 2rem; }
+
+/* ---------- 视频 Hero ---------- */
+.hero-video-section {
+    position: relative;
+    height: min(92vh, 780px);
+    min-height: 560px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hero-video-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 0;
+}
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(15,28,21,.72) 0%, rgba(15,28,21,.55) 45%, rgba(15,28,21,.82) 100%);
+}
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: #fff;
+    max-width: 900px;
+    padding: 2rem 1rem;
+}
+.hero-kicker {
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    font-size: .78rem;
+    opacity: .85;
+    margin-bottom: .8rem;
+}
+.hero-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 900;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    margin-bottom: .3rem;
+    text-shadow: 0 4px 30px rgba(0,0,0,.4);
+}
+.hero-english { font-size: clamp(1rem, 2.4vw, 1.4rem); opacity: .9; letter-spacing: 1px; margin-bottom: 1.6rem; }
+.hero-verse { font-size: clamp(.95rem, 2.2vw, 1.2rem); max-width: 720px; margin: 0 auto .4rem; opacity: .95; line-height: 1.8; }
+.hero-verse-ref { font-size: .85rem; opacity: .75; margin-bottom: 2rem; }
+.hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.hero-scroll {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    opacity: .7;
+    animation: bounce 2s infinite;
+    z-index: 2;
+}
+@keyframes bounce { 0%,100%{transform:translate(-50%,0);} 50%{transform:translate(-50%,8px);} }
+
+.page-header {
+    background: linear-gradient(120deg, var(--forest-dark), var(--forest));
+    color: #fff;
+    padding: 4rem 0 3.2rem;
+}
+.page-header-small { padding: 2.6rem 0 2.2rem; }
+.page-title { font-family: 'Noto Serif TC', serif; font-weight: 900; }
+
+/* ---------- 卡片 ---------- */
+.service-card { border: 0; border-radius: 16px; box-shadow: 0 8px 26px rgba(31,58,45,.08); }
+.service-icon {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: var(--forest-light);
+    color: var(--forest);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+.service-time { color: var(--forest); font-weight: 600; }
+.fellowship-card, .event-card, .resource-card { border: 0; border-radius: 14px; box-shadow: 0 6px 20px rgba(31,58,45,.07); transition: transform .2s ease, box-shadow .2s ease; }
+.fellowship-card:hover, .event-card:hover, .resource-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(31,58,45,.13); }
+.fellowship-name { color: var(--forest-dark); font-family: 'Noto Serif TC', serif; }
+.ministry-chip {
+    background: var(--forest);
+    color: #fff;
+    border-radius: 14px;
+    padding: 1rem 1.2rem;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(31,58,45,.15);
+}
+.event-card .card-body { display: flex; gap: 14px; }
+.event-date {
+    width: 54px; height: 60px;
+    background: var(--forest);
+    color: #fff;
+    border-radius: 12px;
+    text-align: center;
+    padding: 6px 0;
+    flex-shrink: 0;
+}
+.event-day { display: block; font-size: 1.35rem; font-weight: 800; line-height: 1.1; }
+.event-month { font-size: .7rem; text-transform: uppercase; opacity: .85; }
+.event-date-sm {
+    width: 46px; height: 52px;
+    background: var(--forest-light);
+    color: var(--forest);
+    border-radius: 10px;
+    text-align: center;
+    padding: 5px 0;
+    flex-shrink: 0;
+}
+.event-date-sm span { display: block; font-size: 1.15rem; font-weight: 800; line-height: 1.1; }
+.event-date-sm small { font-size: .65rem; text-transform: uppercase; }
+.event-date-lg {
+    width: 64px; height: 66px;
+    background: var(--forest);
+    color: #fff;
+    border-radius: 14px;
+    text-align: center;
+    padding: 8px 0;
+    flex-shrink: 0;
+}
+.event-date-lg span { display: block; font-size: 1.55rem; font-weight: 800; line-height: 1.1; }
+.event-date-lg small { font-size: .72rem; text-transform: uppercase; opacity: .85; }
+.event-category { background: var(--gold); color: #fff; font-weight: 600; }
+.event-title { color: var(--forest-dark); }
+
+.announcement-item, .prayer-item {
+    border-left: 4px solid var(--forest);
+    background: #fff;
+    padding: 1rem 1.2rem;
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 1rem;
+    box-shadow: 0 3px 12px rgba(31,58,45,.06);
+}
+.prayer-item { border-left-color: var(--gold); }
+
+.welcome-cta { background: linear-gradient(120deg, var(--forest-dark), var(--forest)); }
+.verse-lg { font-family: 'Noto Serif TC', serif; font-size: 1.2rem; color: var(--forest-dark); line-height: 2; }
+
+/* ---------- 看板 ---------- */
+.stat-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.2rem;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(31,58,45,.08);
+    border-top: 4px solid var(--gold);
+}
+.stat-value { font-size: 1.9rem; font-weight: 800; color: var(--forest); }
+.stat-label { font-size: .8rem; color: var(--muted); }
+.dashboard-item {
+    padding: .7rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.dashboard-item:last-child { border-bottom: 0; }
+
+/* ---------- 行事历 ---------- */
+.calendar-table { width: 100%; }
+.calendar-table th { background: var(--forest-light); color: var(--forest-dark); padding: .6rem; font-size: .85rem; }
+.calendar-cell { height: 108px; vertical-align: top; padding: .45rem; border: 1px solid #eee; }
+.calendar-cell.muted-day { background: #fafafa; }
+.today-cell { background: #fff8e1 !important; }
+.day-number { font-weight: 700; font-size: .85rem; color: var(--forest-dark); margin-bottom: .2rem; }
+.calendar-event {
+    display: block;
+    font-size: .68rem;
+    color: #fff;
+    border-radius: 6px;
+    padding: 1px 5px;
+    margin-bottom: 2px;
+    text-decoration: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.ev-worship { background: #7a1f1f; }
+.ev-prayer { background: #2c5f8a; }
+.ev-fellowship { background: #1f6b4a; }
+.ev-outreach { background: #a05a1c; }
+.ev-ministry { background: #5b4a9e; }
+.ev-special { background: #8a6d1f; }
+.ev-other { background: #64748b; }
+.badge.ev-worship, .badge.ev-prayer, .badge.ev-fellowship, .badge.ev-outreach, .badge.ev-ministry, .badge.ev-special, .badge.ev-other { color: #fff; }
+.upcoming-item { border-bottom: 1px solid #f0f0f0; }
+.upcoming-item:hover { background: var(--forest-light); }
+
+/* ---------- 其他 ---------- */
+.profile-avatar { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 16px rgba(0,0,0,.15); }
+.profile-avatar-text {
+    background: var(--forest);
+    color: #fff;
+    font-size: 2.2rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.thanks-icon { font-size: 4rem; color: var(--forest); }
+.flash-container { margin-top: 1rem; }
+
+.ccmc-footer { background: var(--forest-dark); color: #fff; }
+.footer-title { font-family: 'Noto Serif TC', serif; font-weight: 700; }
+.footer-heading { color: var(--gold-light); text-transform: uppercase; letter-spacing: 1px; font-size: .85rem; }
+.verse { font-style: italic; color: rgba(255,255,255,.85); }
+
+/* ---------- 表单 ---------- */
+.form-control:focus, .form-select:focus { border-color: var(--forest); box-shadow: 0 0 0 .2rem rgba(31,58,45,.12); }
+
+@media (max-width: 767px) {
+    .hero-video-section { height: 74vh; min-height: 480px; }
+}
+
+
+/* ============================================================
+   v2 主页样式（ccmc.nz 风格）— 2026
+   ============================================================ */
+.v2-hero {
+    position: relative;
+    height: min(94vh, 820px);
+    min-height: 600px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.v2-hero-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 0;
+}
+.v2-hero-poster {
+    background-image: url('../images/hero_poster.svg');
+    background-size: cover;
+    background-position: center;
+    transform-origin: center;
+    animation: v2KenBurns 26s ease-in-out infinite alternate;
+}
+@keyframes v2KenBurns {
+    from { transform: scale(1) translateY(0); }
+    to   { transform: scale(1.09) translateY(-8px); }
+}
+.v2-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at center, rgba(15,28,21,.30) 0%, rgba(15,28,21,.62) 100%),
+        linear-gradient(180deg, rgba(13,24,18,.62) 0%, rgba(13,24,18,.38) 45%, rgba(13,24,18,.78) 100%);
+}
+.v2-hero-inner {
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    max-width: 960px;
+    padding: 2rem 1rem;
+}
+.v2-hero-kicker {
+    font-size: .8rem;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    opacity: .88;
+    margin-bottom: 1rem;
+}
+.v2-hero-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 6.5vw, 4.3rem);
+    line-height: 1.15;
+    text-shadow: 0 4px 34px rgba(0,0,0,.45);
+}
+.v2-hero-sub {
+    font-size: clamp(1rem, 2.4vw, 1.45rem);
+    letter-spacing: 2px;
+    opacity: .92;
+    margin-top: .4rem;
+}
+.v2-hero-divider {
+    width: 74px;
+    height: 2px;
+    background: var(--gold);
+    margin: 1.6rem auto;
+    border-radius: 2px;
+}
+.v2-hero-verse {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(1rem, 2.4vw, 1.28rem);
+    line-height: 2;
+    max-width: 760px;
+    margin: 0 auto .4rem;
+    opacity: .96;
+}
+.v2-hero-verse-ref { font-size: .88rem; opacity: .78; margin-bottom: 2.2rem; }
+.v2-hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.v2-hero-scroll {
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-size: 1.4rem;
+    opacity: .8;
+    z-index: 2;
+    animation: v2Bounce 2s infinite;
+}
+@keyframes v2Bounce { 0%,100%{transform:translate(-50%,0);} 50%{transform:translate(-50%,9px);} }
+
+/* ---------- 通用区块 ---------- */
+.v2-eyebrow {
+    font-size: .76rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: .5rem;
+}
+.v2-section { padding: 5rem 0; }
+.v2-section-alt { background: #f3f0e8; }
+.v2-section-head { text-align: center; margin-bottom: 2.8rem; }
+.v2-section-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 800;
+    color: var(--forest-dark);
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    margin-bottom: .6rem;
+}
+.v2-section-desc, .v2-lead { color: var(--muted); max-width: 640px; margin: 0 auto; }
+.v2-lead { font-size: 1.05rem; }
+
+.v2-newhere {
+    background: linear-gradient(180deg, #faf7f0, #f3efe5);
+    padding: 4.6rem 0;
+    border-bottom: 1px solid #eee6d6;
+}
+.v2-newhere .v2-section-title { margin-bottom: .8rem; }
+
+/* ---------- 主日崇拜 ---------- */
+.v2-service-main {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2.4rem 2rem;
+    text-align: center;
+    box-shadow: 0 14px 40px rgba(31,58,45,.10);
+    border-top: 5px solid var(--gold);
+}
+.v2-service-icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--forest-light);
+    color: var(--forest);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.7rem;
+    margin: 0 auto 1.1rem;
+}
+.v2-service-time { font-size: 1.08rem; font-weight: 600; color: var(--forest); margin-bottom: .45rem; }
+.v2-service-loc { color: var(--muted); margin-bottom: .4rem; }
+.v2-service-side {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.8rem 1.6rem;
+    box-shadow: 0 8px 26px rgba(31,58,45,.07);
+    transition: transform .22s ease, box-shadow .22s ease;
+}
+.v2-service-side:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(31,58,45,.12); }
+.v2-side-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: var(--forest);
+    color: var(--gold-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.35rem;
+    margin-bottom: 1rem;
+}
+
+/* ---------- 团契卡片 ---------- */
+.v2-life-card {
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 26px rgba(31,58,45,.08);
+    transition: transform .22s ease, box-shadow .22s ease;
+}
+.v2-life-card:hover { transform: translateY(-4px); box-shadow: 0 16px 38px rgba(31,58,45,.14); }
+.v2-life-head {
+    background: linear-gradient(120deg, var(--forest-dark), var(--forest));
+    color: var(--gold-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 1.4rem;
+    font-size: 1.5rem;
+}
+.v2-life-type {
+    font-size: .68rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: rgba(255,255,255,.14);
+    padding: 3px 10px;
+    border-radius: 20px;
+    color: #fff;
+}
+.v2-life-card .v2-life-name { padding: 1.25rem 1.4rem .35rem; font-family: 'Noto Serif TC', serif; color: var(--forest-dark); }
+.v2-life-meta { padding: 0 1.4rem; margin-bottom: .2rem; font-size: .88rem; color: var(--muted); }
+.v2-life-desc { padding: .6rem 1.4rem 1.4rem; font-size: .88rem; color: var(--muted); margin-bottom: 0; }
+
+/* ---------- 事工 ---------- */
+.v2-ministry-grid { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+.v2-ministry-chip {
+    background: var(--forest);
+    color: #fff;
+    border-radius: 16px;
+    padding: 1rem 1.3rem;
+    font-weight: 600;
+    min-width: 180px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(31,58,45,.14);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.v2-ministry-chip:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(31,58,45,.2); }
+.v2-ministry-chip span { display: block; font-size: .75rem; font-weight: 400; color: rgba(255,255,255,.75); margin-top: .25rem; }
+
+/* ---------- 活动列表 ---------- */
+.v2-event-item {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    background: #fff;
+    border-radius: 16px;
+    padding: 1rem 1.2rem;
+    box-shadow: 0 6px 20px rgba(31,58,45,.07);
+    transition: transform .2s ease, box-shadow .2s ease;
+    height: 100%;
+}
+.v2-event-item:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(31,58,45,.12); }
+.v2-event-date {
+    width: 62px; height: 66px;
+    background: var(--forest);
+    color: #fff;
+    border-radius: 14px;
+    text-align: center;
+    padding: 8px 0;
+    flex-shrink: 0;
+}
+.v2-event-date span { display: block; font-size: 1.5rem; font-weight: 800; line-height: 1.1; }
+.v2-event-date small { font-size: .72rem; text-transform: uppercase; opacity: .85; }
+.v2-event-info h5 { color: var(--forest-dark); }
+
+/* ---------- 通知 / 代祷 ---------- */
+.v2-panel {
+    background: #fff;
+    border-left: 4px solid var(--forest);
+    border-radius: 0 14px 14px 0;
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 14px rgba(31,58,45,.06);
+}
+.v2-panel-prayer { border-left-color: var(--gold); }
+
+/* ---------- 联系我们 ---------- */
+.v2-contact {
+    background: linear-gradient(120deg, var(--forest-dark), var(--forest));
+    padding: 5rem 0;
+    color: #fff;
+}
+.v2-contact-list p { margin-bottom: .8rem; font-size: 1.02rem; }
+.v2-contact-card {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 20px;
+    padding: 2.2rem 1.8rem;
+    backdrop-filter: blur(4px);
+}
+
+@media (max-width: 767px) {
+    .v2-hero { height: 78vh; min-height: 520px; }
+    .v2-section { padding: 3.4rem 0; }
+    .v2-newhere { padding: 3.2rem 0; }
+}

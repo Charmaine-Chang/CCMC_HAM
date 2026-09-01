@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}{{ t('reports_title') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h3 class="section-title mb-4"><i class="bi bi-file-earmark-bar-graph me-2 text-forest"></i>{{ t('reports_title') }}</h3>
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-person-plus me-2 text-forest"></i>{{ t('visitors_report') }}</h5>
+                    <a href="{{ url_for('visitors.index') }}" class="small">{{ t('manage') }} <i class="bi bi-arrow-right"></i></a>
+                </div>
+                <div class="card-body">
+                    <h6 class="text-muted small">{{ t('by_month') }}</h6>
+                    {% for m in visitors_by_month %}
+                    <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                        <span>{{ m.ym }}</span>
+                        <span class="badge bg-forest">{{ m.count }} {{ t('people_unit') }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-muted small mb-3">{{ t('no_data') }}。</p>
+                    {% endfor %}
+                    <h6 class="text-muted small mt-3">{{ t('status_distribution') }}</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for s in visitors_by_status %}
+                        <span class="badge bg-light text-dark border">{{ visitor_status_label(s.status) }}: {{ s.count }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-clipboard-check me-2 text-forest"></i>{{ t('attendance_report') }}</h5>
+                    <a href="{{ url_for('attendance.report') }}" class="small">{{ t('view_all') }} <i class="bi bi-arrow-right"></i></a>
+                </div>
+                <div class="card-body">
+                    <h6 class="text-muted small">{{ t('recent_attendance') }}</h6>
+                    {% for d in attendance_daily %}
+                    <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                        <span>{{ d.service_date | date_only }}</span>
+                        <span class="badge bg-forest">{{ d.count }} {{ t('people_unit') }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-muted small mb-0">{{ t('no_data') }}。</p>
+                    {% endfor %}
+                    {% if attendance_daily %}
+                    <canvas id="attendanceChart" class="mt-3" height="140"></canvas>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white"><h5 class="mb-0"><i class="bi bi-people me-2 text-forest"></i>{{ t('group_report') }}</h5></div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="table-light">
+                            <tr><th>{{ t('group') }}</th><th>{{ t('group_type') }}</th><th>{{ t('member_count') }}</th><th>{{ t('percentage') }}</th></tr>
+                        </thead>
+                        <tbody>
+                            {% set total_members = group_counts | sum(attribute='member_count') %}
+                            {% for g in group_counts %}
+                            <tr>
+                                <td class="fw-semibold">{{ get_i18n_text(g, 'group_name') }}</td>
+                                <td>{{ group_type_label(g.group_type) }}</td>
+                                <td><span class="badge bg-forest">{{ g.member_count }} {{ t('people_unit') }}</span></td>
+                                <td>
+                                    {% if total_members %}
+                                    <div class="progress" style="height: 8px; max-width: 240px;">
+                                        <div class="progress-bar bg-forest" style="width: {{ (g.member_count / total_members * 100) | round(1) }}%"></div>
+                                    </div>
+                                    <small class="text-muted">{{ (g.member_count / total_members * 100) | round(1) }}%</small>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="4" class="text-center text-muted py-4">{{ t('no_data') }}。</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{% if attendance_daily %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof Chart === 'undefined') return;
+    const dates = {{ attendance_daily | map(attribute='label') | list | tojson }};
+    const counts = {{ attendance_daily | map(attribute='count') | list | tojson }};
+    new Chart(document.getElementById('attendanceChart'), {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: '{{ t('attendance_count') }}',
+                data: counts,
+                borderColor: '#1f3a2d',
+                backgroundColor: 'rgba(31,58,45,0.12)',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: { plugins: { legend: { display: false } } }
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

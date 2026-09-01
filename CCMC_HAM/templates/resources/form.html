@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ t('new_resource') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+{% set cat_labels = {
+    '诗歌': t('resource_hymn'),
+    '经文': t('resource_scripture'),
+    '见证': t('resource_testimony'),
+    '资料': t('resource_material'),
+    '其他': t('resource_other')
+} %}
+<div class="container py-4" style="max-width: 760px;">
+    <h3 class="section-title mb-4">{{ t('new_resource') }}</h3>
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4 p-lg-5">
+            <form method="POST">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">{{ t('category') }}</label>
+                        <select name="category" class="form-select">
+                            {% for c in categories %}
+                            <option value="{{ c }}" {{ 'selected' if resource and resource.category == c }}>{{ cat_labels.get(c, c) }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label">{{ t('title') }} <span class="text-danger">*</span></label>
+                        <input type="text" name="title" class="form-control" value="{{ resource.title if resource else '' }}" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">{{ t('content') }}</label>
+                        <textarea name="content" class="form-control" rows="8">{{ resource.content if resource else '' }}</textarea>
+                    </div>
+                </div>
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" name="is_published" id="is_published" {{ 'checked' if not resource or resource.is_published }}>
+                    <label class="form-check-label" for="is_published">{{ t('is_published') }}</label>
+                </div>
+                <div class="form-check form-switch mb-4">
+                    <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured" {{ 'checked' if resource and resource.is_featured }}>
+                    <label class="form-check-label" for="is_featured">{{ t('is_featured') }}</label>
+                </div>
+                <button class="btn btn-forest rounded-pill px-4">{{ t('save') }}</button>
+                <a href="{{ url_for('resources.index') }}" class="btn btn-outline-secondary rounded-pill px-4">{{ t('cancel') }}</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

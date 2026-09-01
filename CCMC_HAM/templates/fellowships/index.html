@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ t('fellowships_title') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <h3 class="section-title mb-0"><i class="bi bi-people me-2 text-forest"></i>{{ t('fellowships_title') }}</h3>
+        {% if session.get('role_id') in [ROLE_ADMIN, ROLE_COORDINATOR] %}
+        <a href="{{ url_for('fellowships.create') }}" class="btn btn-forest rounded-pill px-3"><i class="bi bi-plus-lg me-1"></i>{{ t('new_group') }}</a>
+        {% endif %}
+    </div>
+    <div class="row g-4">
+        {% for g in groups %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="mb-0">{{ get_i18n_text(g, 'group_name') }}</h5>
+                        <span class="badge bg-light text-dark border">{{ group_type_label(g.group_type) }}</span>
+                    </div>
+                    {% if g.leader_first or g.leader_last %}<p class="small text-muted mb-1"><i class="bi bi-person me-1"></i>{{ t('leader') }}: {{ g.leader_first or '' }}{{ g.leader_last or '' }}</p>{% endif %}
+                    {% if g.meeting_time %}<p class="small text-muted mb-1"><i class="bi bi-clock me-1"></i>{{ get_i18n_text(g, 'meeting_time') }}</p>{% endif %}
+                    {% if g.meeting_location %}<p class="small text-muted mb-2"><i class="bi bi-geo-alt me-1"></i>{{ get_i18n_text(g, 'meeting_location') }}</p>{% endif %}
+                    <p class="text-muted small">{{ (get_i18n_text(g, 'description') or '')[:110] }}{% if get_i18n_text(g, 'description') and get_i18n_text(g, 'description')|length > 110 %}…{% endif %}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="small text-muted">{{ g.member_count }} {{ t('members') }}</span>
+                        <a href="{{ url_for('fellowships.detail', group_id=g.group_id) }}" class="btn btn-sm btn-outline-forest rounded-pill">{{ t('view') }} <i class="bi bi-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center text-muted py-5">{{ t('no_groups') }}</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

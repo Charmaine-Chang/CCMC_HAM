@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ t('members_permissions_title') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <h3 class="section-title mb-0"><i class="bi bi-people-fill me-2 text-forest"></i>{{ t('members_permissions_title') }}</h3>
+        <a href="{{ url_for('admin.add_member') }}" class="btn btn-forest rounded-pill px-3"><i class="bi bi-person-plus me-1"></i>{{ t('add_member') }}</a>
+    </div>
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr><th>{{ t('user') }}</th><th>{{ t('name') }}</th><th>{{ t('contact_info') }}</th><th>{{ t('role') }}</th><th>{{ t('status') }}</th><th>{{ t('group_count') }}</th><th>{{ t('action') }}</th></tr>
+                </thead>
+                <tbody>
+                    {% for m in members %}
+                    <tr>
+                        <td class="fw-semibold">@{{ m.username }}</td>
+                        <td>{{ m.first_name or '' }}{{ m.last_name or '' }}</td>
+                        <td class="small text-muted">{% if m.phone %}{{ m.phone }}<br>{% endif %}{{ m.email or '' }}</td>
+                        <td>
+                            <span class="badge {{ 'bg-danger' if m.role_id == ROLE_ADMIN else 'bg-primary' if m.role_id == ROLE_COORDINATOR else 'bg-success' if m.role_id == ROLE_OPERATOR else 'bg-secondary' }}">{{ ROLE_NAMES.get(m.role_id, '') }}</span>
+                        </td>
+                        <td>
+                            <span class="badge {{ 'bg-success' if m.status == 'Active' else 'bg-secondary' }}">{{ m.status }}</span>
+                        </td>
+                        <td>{{ m.group_count }}</td>
+                        <td>
+                            {% if m.user_id != session.get('user_id') %}
+                            <div class="d-flex gap-2 flex-wrap">
+                                <form method="POST" action="{{ url_for('admin.change_role', user_id=m.user_id) }}" class="d-flex gap-1">
+                                    <select name="role_id" class="form-select form-select-sm" style="width: auto;">
+                                        {% for rid, rname in role_names.items() %}
+                                        <option value="{{ rid }}" {{ 'selected' if m.role_id == rid }}>{{ rname }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button class="btn btn-sm btn-outline-forest rounded-pill">{{ t('change_role') }}</button>
+                                </form>
+                                <form method="POST" action="{{ url_for('admin.change_status', user_id=m.user_id) }}" class="d-flex gap-1">
+                                    <select name="status" class="form-select form-select-sm" style="width: auto;">
+                                        <option value="Active" {{ 'selected' if m.status == 'Active' }}>Active</option>
+                                        <option value="Inactive" {{ 'selected' if m.status == 'Inactive' }}>Inactive</option>
+                                        <option value="Suspended" {{ 'selected' if m.status == 'Suspended' }}>Suspended</option>
+                                    </select>
+                                    <button class="btn btn-sm btn-outline-secondary rounded-pill">{{ t('update') }}</button>
+                                </form>
+                            </div>
+                            {% else %}
+                            <span class="text-muted small">{{ t('current_account') }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="7" class="text-center text-muted py-5">{{ t('no_members') }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

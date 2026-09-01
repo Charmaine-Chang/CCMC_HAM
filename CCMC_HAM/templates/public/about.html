@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ t('sunday_worship') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container text-center">
+        <h1 class="page-title">{{ t('sunday_worship') }}</h1>
+        <p class="text-white-50 mb-0">Sunday Service &amp; Sunday School</p>
+    </div>
+</div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card v2-service-main border-0 shadow-sm">
+                <div class="card-body p-4 p-lg-5 text-center">
+                    <div class="v2-service-icon mx-auto"><i class="bi bi-sun"></i></div>
+                    <h3 class="mb-2">{{ get_setting('service_1_name', 'Sunday Worship') }}</h3>
+                    <p class="v2-service-time"><i class="bi bi-clock me-2"></i>{{ get_setting('service_1_time', 'Sunday 2:00 PM') }}</p>
+                    <p class="v2-service-loc"><i class="bi bi-geo-alt me-2"></i>{{ get_setting('service_1_location', '') }}</p>
+                    <p class="text-muted mt-3">{{ 'Sunday Worship includes singing, prayer and the sermon. All brothers, sisters and friends are welcome.' if current_language == 'en' else '主日崇拜：唱诗、祷告、证道。欢迎所有弟兄姐妹与朋友参加。' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-4 mt-2">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h5><i class="bi bi-book me-2 text-forest"></i>{{ 'Junior Sunday School' if current_language == 'en' else '少年主日学' }}</h5>
+                    <p class="text-muted mb-0">{{ 'Held during Sunday services, it helps teenagers build a solid foundation of faith through Bible stories, faith application and small group discussion. Curriculum: The Gospel Project.' if current_language == 'en' else '在周日教会聚会时间内进行，深入探讨圣经故事、信仰应用与小组讨论，帮助青少年建立坚实的信仰基础。教材：The Gospel Project。' }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h5><i class="bi bi-balloon me-2 text-forest"></i>{{ "Children's Sunday School" if current_language == 'en' else '儿童主日学' }}</h5>
+                    <p class="text-muted mb-0">{{ 'Through stories, games, songs and crafts, children learn about God, the teachings of Jesus Christ and biblical values.' if current_language == 'en' else '通过故事、游戏、歌曲和手工艺，教导孩子认识上帝、耶稣基督的教导与道德，奠定圣经知识的基础。' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mt-4 border-0 shadow-sm">
+        <div class="card-body p-4 text-center">
+            <p class="verse-lg mb-2">{{ get_setting('verse_text', '') }}</p>
+            <p class="text-muted mb-0">—— {{ get_setting('verse_ref', '') }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

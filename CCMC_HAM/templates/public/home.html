@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+{% block title %}{{ get_setting('church_name_en', 'Hamilton Chinese Methodist Church') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block main_class %}public-page{% endblock %}
+
+{% block content %}
+<!-- Hero video -->
+<section class="v2-hero">
+    {% set raw_video = settings.get('hero_video_url', '') %}
+    {% if raw_video %}
+        {% if raw_video | is_youtube %}
+        <iframe class="v2-hero-media" src="{{ raw_video | hero_video_url }}" title="Church video"
+                frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        {% else %}
+        <video class="v2-hero-media" autoplay muted loop playsinline poster="{{ url_for('static', filename='images/hero_poster.svg') }}">
+            <source src="{{ raw_video | hero_video_url }}" type="video/mp4">
+        </video>
+        {% endif %}
+    {% else %}
+    <div class="v2-hero-media v2-hero-poster" role="img" aria-label="{{ get_setting('church_name', 'Hamilton Chinese Methodist Church') }}"></div>
+    {% endif %}
+    <div class="v2-hero-overlay"></div>
+    <div class="v2-hero-inner container text-center">
+        <p class="v2-hero-kicker">{{ get_setting('denomination', 'Methodist Church in New Zealand') }}</p>
+        <h1 class="v2-hero-title">{{ get_setting('church_name', 'Hamilton Chinese Methodist Church') }}</h1>
+        <p class="v2-hero-sub">{{ get_setting('church_name_en', 'Hamilton Chinese Methodist Church') }}</p>
+        <div class="v2-hero-divider"></div>
+        <p class="v2-hero-verse">{{ get_setting('verse_text', '') }}</p>
+        <p class="v2-hero-verse-ref">—— {{ get_setting('verse_ref', '') }}</p>
+        <div class="v2-hero-actions">
+            <a href="{{ url_for('main.about') }}" class="btn btn-gold btn-lg rounded-pill px-4 fw-bold">{{ t('sunday_worship') }}</a>
+            <a href="{{ url_for('main.welcome') }}" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-bold">{{ t('welcome_new_friends') }}</a>
+        </div>
+    </div>
+    <a class="v2-hero-scroll" href="#v2-newhere" aria-label="Scroll down"><i class="bi bi-chevron-down"></i></a>
+</section>
+
+<!-- New here CTA -->
+<section class="v2-newhere" id="v2-newhere">
+    <div class="container text-center">
+        <p class="v2-eyebrow">{{ 'New here? Tell us more about you' if current_language == 'en' else '第一次来？告诉我们更多关于你' }}</p>
+        <h2 class="v2-section-title">{{ 'First Time? Let Us Know You' if current_language == 'en' else '第一次来？让我们认识您' }}</h2>
+        <p class="v2-lead">{{ get_setting('welcome_message', 'Welcome to Hamilton Chinese Methodist Church!') }}</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{{ url_for('main.welcome') }}" class="btn btn-gold btn-lg rounded-pill px-5 fw-bold"><i class="bi bi-person-plus me-2"></i>{{ 'New Friend Registration' if current_language == 'en' else '新朋友登记' }}</a>
+            <a href="{{ url_for('main.qr_code') }}" class="btn btn-outline-forest btn-lg rounded-pill px-5"><i class="bi bi-qr-code me-2"></i>{{ 'Scan QR Code On-Site' if current_language == 'en' else '现场扫码登记' }}</a>
+        </div>
+    </div>
+</section>
+
+<!-- Sunday Worship -->
+<section class="v2-section" id="v2-services">
+    <div class="container">
+        <div class="v2-section-head">
+            <p class="v2-eyebrow">Join our Sunday Service</p>
+            <h2 class="v2-section-title">{{ t('sunday_worship') }}</h2>
+            <p class="v2-section-desc">{{ "Welcome to worship, pray, and listen to God's word with us." if current_language == 'en' else '欢迎您与我们一同唱诗、祷告、聆听神的话语。' }}</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-5">
+                <div class="v2-service-main h-100">
+                    <div class="v2-service-icon"><i class="bi bi-sun"></i></div>
+                    <h3 class="mb-2">{{ get_setting('service_1_name', 'Sunday Worship') }}</h3>
+                    <p class="v2-service-time"><i class="bi bi-clock me-2"></i>{{ get_setting('service_1_time', 'Sunday 2:00 PM') }}</p>
+                    <p class="v2-service-loc"><i class="bi bi-geo-alt me-2"></i>{{ get_setting('service_1_location', '') }}</p>
+                    <a href="{{ url_for('main.about') }}" class="btn btn-forest rounded-pill px-4 mt-3">{{ t('view_all') }} <i class="bi bi-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="row g-4 h-100">
+                    <div class="col-md-6">
+                        <div class="v2-service-side h-100">
+                            <div class="v2-side-icon"><i class="bi bi-play-circle"></i></div>
+                            <h4>{{ 'Watch Online' if current_language == 'en' else '线上观看' }}</h4>
+                            <p class="text-muted small mb-3">{{ 'Watch Online — subscribe to our church YouTube channel for live and recorded services.' if current_language == 'en' else '订阅教会 YouTube 频道，观看主日崇拜直播与回放。' }}</p>
+                            {% if settings.get('youtube_url') %}
+                            <a href="{{ settings.get('youtube_url') }}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-forest rounded-pill">{{ 'Watch Online' if current_language == 'en' else '前往观看' }} <i class="bi bi-box-arrow-up-right ms-1"></i></a>
+                            {% else %}
+                            <span class="badge bg-light text-dark border">{{ 'Coming Soon' if current_language == 'en' else '即将开通' }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="v2-service-side h-100">
+                            <div class="v2-side-icon"><i class="bi bi-chat-heart"></i></div>
+                            <h4>{{ 'Children & Youth' if current_language == 'en' else '儿童与青少年' }}</h4>
+                            <p class="text-muted small mb-0">{{ 'Sunday School is available during the service for children and youth.' if current_language == 'en' else '崇拜期间为儿童和青少年设有主日学。' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Fellowships -->
+<section class="v2-section" id="v2-fellowships">
+    <div class="container">
+        <div class="v2-section-head">
+            <p class="v2-eyebrow">{{ 'Life Groups' if current_language == 'en' else '团契生活' }}</p>
+            <h2 class="v2-section-title">{{ t('fellowships') }}</h2>
+            <p class="v2-section-desc">{{ 'Grow together in fellowship by life stage.' if current_language == 'en' else '按人生阶段分组，一起分享、支持、共同成长。' }}</p>
+        </div>
+        <div class="row g-4">
+            {% for g in fellowships %}
+            <div class="col-md-6 col-lg-4">
+                <div class="v2-life-card h-100">
+                    <div class="v2-life-head">
+                        <i class="bi bi-people"></i>
+                        <span class="v2-life-type">{{ t('fellowships') }}</span>
+                    </div>
+                    <h4 class="v2-life-name">{{ get_i18n_text(g, 'group_name') }}</h4>
+                    {% if g.meeting_time %}<p class="v2-life-meta"><i class="bi bi-clock me-2"></i>{{ get_i18n_text(g, 'meeting_time') }}</p>{% endif %}
+                    {% if g.meeting_location %}<p class="v2-life-meta"><i class="bi bi-geo-alt me-2"></i>{{ get_i18n_text(g, 'meeting_location') }}</p>{% endif %}
+                    <p class="v2-life-desc">{{ (get_i18n_text(g, 'description') or '')[:90] }}{% if get_i18n_text(g, 'description') and get_i18n_text(g, 'description')|length > 90 %}…{% endif %}</p>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12 text-center text-muted">{{ 'Fellowship information coming soon.' if current_language == 'en' else '团契信息即将更新。' }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Ministries -->
+<section class="v2-section">
+    <div class="container">
+        <div class="v2-section-head">
+            <p class="v2-eyebrow">Ministries</p>
+            <h2 class="v2-section-title">{{ t('ministry') }}</h2>
+        </div>
+        <div class="v2-ministry-grid">
+            {% for g in ministries %}
+            <div class="v2-ministry-chip">
+                <i class="bi bi-stars me-2"></i>{{ get_i18n_text(g, 'group_name') }}
+                {% if g.meeting_time %}<span>{{ get_i18n_text(g, 'meeting_time') }}</span>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Upcoming events -->
+<section class="v2-section v2-section-alt" id="v2-events">
+    <div class="container">
+        <div class="v2-section-head">
+            <p class="v2-eyebrow">Upcoming Events</p>
+            <h2 class="v2-section-title">{{ t('upcoming_events') }}</h2>
+            <a href="{{ url_for('main.public_events') }}" class="btn btn-outline-forest btn-sm rounded-pill px-3 mt-2">{{ t('view_all') }} <i class="bi bi-arrow-right ms-1"></i></a>
+        </div>
+        <div class="row g-3">
+            {% for ev in events %}
+            <div class="col-lg-6">
+                <a href="{{ url_for('main.public_events') }}" class="text-decoration-none text-dark">
+                    <div class="v2-event-item">
+                        <div class="v2-event-date">
+                            <span>{{ ev.start_time.strftime('%d') }}</span>
+                            <small>{{ ev.start_time.strftime('%b') }}</small>
+                        </div>
+                        <div class="v2-event-info">
+                            <span class="badge event-category">{{ category_label(ev.category) }}</span>
+                            <h5 class="mb-1">{{ get_i18n_text(ev, 'title') }}</h5>
+                            <p class="small text-muted mb-0">
+                                <i class="bi bi-clock me-1"></i>{{ ev.start_time.strftime('%Y-%m-%d %H:%M') }}
+                                {% if ev.location %} · <i class="bi bi-geo-alt ms-1 me-1"></i>{{ get_i18n_text(ev, 'location') }}{% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% else %}
+            <div class="col-12 text-center text-muted py-4">{{ t('no_events') }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Announcements + Prayer -->
+<section class="v2-section" id="v2-news">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <p class="v2-eyebrow">Weekly Bulletin</p>
+                <h2 class="v2-section-title">{{ t('latest_announcements') }}</h2>
+                {% for a in announcements %}
+                <div class="v2-panel">
+                    <h5 class="mb-1">{{ get_i18n_text(a, 'title') }}</h5>
+                    <p class="text-muted small mb-1">{{ (get_i18n_text(a, 'content') or '')[:180] }}{% if get_i18n_text(a, 'content') and get_i18n_text(a, 'content')|length > 180 %}…{% endif %}</p>
+                    <small class="text-muted"><i class="bi bi-calendar-event me-1"></i>{{ a.created_at | date_only }}</small>
+                </div>
+                {% else %}
+                <p class="text-muted">{{ t('no_announcements') }}</p>
+                {% endfor %}
+            </div>
+            <div class="col-lg-5">
+                <p class="v2-eyebrow">Prayer Requests</p>
+                <h2 class="v2-section-title">{{ t('prayer') }}</h2>
+                {% for p in prayers %}
+                <div class="v2-panel v2-panel-prayer">
+                    <h6 class="mb-1">{{ get_i18n_text(p, 'title') }}</h6>
+                    <p class="text-muted small mb-1">{{ (get_i18n_text(p, 'content') or '')[:120] }}{% if get_i18n_text(p, 'content') and get_i18n_text(p, 'content')|length > 120 %}…{% endif %}</p>
+                    <small class="text-muted">—— {{ p.username }} · {{ p.created_at | date_only }}</small>
+                </div>
+                {% else %}
+                <p class="text-muted">{{ t('no_prayers') }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact -->
+<section class="v2-contact" id="v2-contact">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <p class="v2-eyebrow">Contact Us</p>
+                <h2 class="v2-section-title text-white">{{ t('contact_us') }}</h2>
+                <p class="text-white-50">{{ 'Feel free to contact us or visit us for worship.' if current_language == 'en' else '欢迎您随时与我们联系，或来教会与我们一同敬拜。' }}</p>
+                <div class="v2-contact-list">
+                    <p><i class="bi bi-person me-3"></i>{{ get_setting('pastor', '') }}</p>
+                    <p><i class="bi bi-telephone me-3"></i>{{ get_setting('phone', '') }}</p>
+                    <p><i class="bi bi-envelope me-3"></i>{{ get_setting('email', '') }}</p>
+                    <p><i class="bi bi-geo-alt me-3"></i>{{ get_setting('office_address', '') }}</p>
+                </div>
+                <a href="{{ url_for('main.contact') }}" class="btn btn-gold rounded-pill px-4 mt-2">{{ 'More Contact Info' if current_language == 'en' else '更多联系方式' }} <i class="bi bi-arrow-right ms-1"></i></a>
+            </div>
+            <div class="col-lg-6">
+                <div class="v2-contact-card text-center">
+                    <p class="v2-eyebrow mb-2">{{ t('sunday_worship') }}</p>
+                    <h4>{{ get_setting('service_1_name', 'Sunday Worship') }}</h4>
+                    <p class="mb-1"><i class="bi bi-clock me-2"></i>{{ get_setting('service_1_time', '') }}</p>
+                    <p class="mb-3"><i class="bi bi-geo-alt me-2"></i>{{ get_setting('service_1_location', '') }}</p>
+                    <a href="{{ url_for('main.welcome') }}" class="btn btn-outline-light rounded-pill px-4"><i class="bi bi-hand-thumbs-up me-1"></i>{{ "I'm a New Friend" if current_language == 'en' else '我是新朋友' }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

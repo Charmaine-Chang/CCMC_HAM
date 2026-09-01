@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}{{ t('attendance_record_title') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <h3 class="section-title mb-0"><i class="bi bi-clipboard-check me-2 text-forest"></i>{{ t('attendance_record_title') }}</h3>
+        {% if session.get('role_id') in [ROLE_ADMIN, ROLE_COORDINATOR] %}
+        <a href="{{ url_for('attendance.report') }}" class="btn btn-outline-forest rounded-pill px-3"><i class="bi bi-graph-up me-1"></i>{{ t('attendance_report') }}</a>
+        {% endif %}
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h5 class="mb-3">{{ t('record_attendance') }}</h5>
+                    <form method="POST" action="{{ url_for('attendance.submit') }}">
+                        <div class="mb-3">
+                            <label class="form-label">{{ t('date') }}</label>
+                            <input type="date" name="service_date" class="form-control" value="{{ selected_date }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ t('worship_activity') }}</label>
+                            <select name="event_id" class="form-select">
+                                <option value="">{{ t('no_specific_activity') }}</option>
+                                {% for ev in worship_events %}
+                                <option value="{{ ev.event_id }}">{{ get_i18n_text(ev, 'title') }} ({{ ev.start_time.strftime('%Y-%m-%d') }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ t('attendee_names') }}</label>
+                            <textarea name="attendee_names" class="form-control" rows="5" placeholder="{{ t('attendees_placeholder') }}" required></textarea>
+                            <div class="form-text">{{ t('paste_note') }}</div>
+                        </div>
+                        <button class="btn btn-forest rounded-pill px-4"><i class="bi bi-save me-1"></i>{{ t('save_record') }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{{ selected_date }} {{ t('attendance_list') }}</h5>
+                    <span class="badge bg-forest fs-6">{{ t('total_people') }} {{ total }} {{ t('people_unit') }}</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light"><tr><th>{{ t('name') }}</th><th>{{ t('worship_activity') }}</th><th></th></tr></thead>
+                        <tbody>
+                            {% for r in records %}
+                            <tr>
+                                <td class="fw-semibold">{{ r.attendee_name }}</td>
+                                <td class="small text-muted">{{ r.title or t('unlinked') }}</td>
+                                <td class="text-end">
+                                    {% if session.get('role_id') in [ROLE_ADMIN, ROLE_COORDINATOR] %}
+                                    <form method="POST" action="{{ url_for('attendance.delete', attendance_id=r.attendance_id) }}" onsubmit="return confirm('{{ t('delete') }}?');">
+                                        <button class="btn btn-sm btn-outline-danger rounded-pill"><i class="bi bi-x-lg"></i></button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="3" class="text-center text-muted py-4">{{ t('no_records_today') }}</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

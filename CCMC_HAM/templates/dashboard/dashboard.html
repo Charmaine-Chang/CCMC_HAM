@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}{{ t('dashboard') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="page-header page-header-small">
+    <div class="container">
+        <h1 class="page-title mb-1">{{ t('dashboard') }}</h1>
+        <p class="text-white-50 mb-0">
+            {{ t('welcome_dashboard') }}, {{ session.get('display_name') or session.get('username') }}!
+            {% if role_id == ROLE_ADMIN %}{{ t('role_admin_dashboard_text') }}
+            {% elif role_id == ROLE_COORDINATOR %}{{ t('role_coordinator_dashboard_text') }}
+            {% elif role_id == ROLE_OPERATOR %}{{ t('role_operator_dashboard_text') }}
+            {% else %}{{ t('role_member_dashboard_text') }}{% endif %}
+        </p>
+    </div>
+</div>
+<div class="container py-4">
+    {% if stats %}
+    <div class="row g-3 mb-4">
+        {% if 'events_upcoming' in stats %}
+        <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.get('events_upcoming', 0) }}</div><div class="stat-label">{{ t('upcoming_events') }}</div></div></div>
+        {% endif %}
+        {% if 'visitors_new' in stats %}
+        <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.get('visitors_new', 0) }}</div><div class="stat-label">{{ t('follow_up_visitors') }}</div></div></div>
+        {% endif %}
+        {% if 'members' in stats %}
+        <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.get('members', 0) }}</div><div class="stat-label">{{ t('active_members') }}</div></div></div>
+        {% endif %}
+        {% if 'attendance_week' in stats %}
+        <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.get('attendance_week', 0) }}</div><div class="stat-label">{{ t('week_attendance') }}</div></div></div>
+        {% endif %}
+        {% if 'pending_rosters' in stats %}
+        <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-value">{{ stats.get('pending_rosters', 0) }}</div><div class="stat-label">{{ t('pending_rosters') }}</div></div></div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-calendar3 me-2 text-forest"></i>{{ t('upcoming_events') }}</h5>
+                    <a href="{{ url_for('events.index') }}" class="small">{{ t('view_events') }} <i class="bi bi-arrow-right"></i></a>
+                </div>
+                <div class="card-body">
+                    {% for ev in upcoming %}
+                    <div class="dashboard-item d-flex align-items-center">
+                        <div class="event-date-sm me-3">
+                            <span>{{ ev.start_time.strftime('%d') }}</span>
+                            <small>{{ ev.start_time.strftime('%b') }}</small>
+                        </div>
+                        <div class="flex-grow-1">
+                            <a href="{{ url_for('events.detail', event_id=ev.event_id) }}" class="fw-semibold text-decoration-none text-dark">{{ get_i18n_text(ev, 'title') }}</a>
+                            <div class="small text-muted"><i class="bi bi-clock me-1"></i>{{ ev.start_time.strftime('%A %H:%M') }}{% if ev.location %} · {{ ev.location }}{% endif %}</div>
+                        </div>
+                        <span class="badge event-category">{{ category_label(ev.category) }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-muted mb-0">{{ t('no_events') }}。</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-list-check me-2 text-forest"></i>{{ t('my_rosters') }}</h5>
+                </div>
+                <div class="card-body">
+                    {% for r in my_rosters %}
+                    <div class="dashboard-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="fw-semibold">{{ r.task_name }}</div>
+                            <div class="small text-muted">{{ r.service_date | date_only }}{% if r.event_title %} · {{ r.event_title }}{% endif %}</div>
+                        </div>
+                        <span class="badge {{ 'bg-success' if r.status == 'confirmed' else 'bg-warning text-dark' }}">{{ roster_status_label(r.status) }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-muted small mb-0">{{ t('no_rosters') }}。</p>
+                    {% endfor %}
+                    <a href="{{ url_for('rosters.mine') }}" class="btn btn-sm btn-outline-forest rounded-pill mt-2">{{ t('view_all') }}</a>
+                </div>
+            </div>
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-heart me-2 text-forest"></i>{{ t('prayer') }}</h5>
+                </div>
+                <div class="card-body">
+                    {% for p in prayers %}
+                    <div class="dashboard-item">
+                        <div class="fw-semibold">{{ get_i18n_text(p, 'title') }}</div>
+                        <div class="small text-muted">{{ p.username }} · {{ p.created_at | date_only }}</div>
+                    </div>
+                    {% else %}
+                    <p class="text-muted small mb-0">{{ t('no_prayers') }}。</p>
+                    {% endfor %}
+                    <a href="{{ url_for('prayer.create') }}" class="btn btn-sm btn-outline-forest rounded-pill mt-2">{{ t('submit_prayer') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white">
+            <h5 class="mb-0"><i class="bi bi-megaphone me-2 text-forest"></i>{{ t('latest_announcements') }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                {% for a in announcements %}
+                <div class="col-md-6">
+                    <div class="announcement-item border rounded-3 p-3 h-100">
+                        <h6 class="mb-1">{{ get_i18n_text(a, 'title') }}</h6>
+                        <p class="text-muted small mb-1">{{ (get_i18n_text(a, 'content') or '')[:140] }}{% if get_i18n_text(a, 'content') and get_i18n_text(a, 'content')|length > 140 %}…{% endif %}</p>
+                        <small class="text-muted">{{ a.created_at | date_only }}</small>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-12 text-muted">{{ t('no_announcements') }}。</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

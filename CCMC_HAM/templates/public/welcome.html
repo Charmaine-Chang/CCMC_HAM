@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}{{ t('welcome_new_friends') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container text-center">
+        <h1 class="page-title">{{ t('welcome_new_friends') }}</h1>
+        <p class="text-white-50 mb-0">New here? Tell us more about you</p>
+    </div>
+</div>
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-body p-4 p-lg-5">
+                    <h4 class="mb-1">{{ 'New Friend Registration Form' if current_language == 'en' else '新朋友登记表' }}</h4>
+                    <p class="text-muted mb-4">{{ get_setting('welcome_message', '') }}</p>
+                    <form method="POST" action="{{ url_for('main.welcome_submit') }}">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">{{ t('name') }} <span class="text-danger">*</span></label>
+                                <input type="text" name="first_name" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">{{ t('last_name') }}</label>
+                                <input type="text" name="last_name" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">{{ t('email') }}</label>
+                                <input type="email" name="email" class="form-control" placeholder="you@example.com">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">{{ t('phone') }}</label>
+                                <input type="tel" name="phone" class="form-control" placeholder="021 xxx xxxx">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">{{ t('interested_fellowship') }}</label>
+                                <select name="fellowship_interest" class="form-select">
+                                    <option value="">{{ t('optional') }}…</option>
+                                    {% for f in fellowships %}
+                                    <option value="{{ get_i18n_text(f, 'group_name') }}">{{ get_i18n_text(f, 'group_name') }}</option>
+                                    {% endfor %}
+                                    <option value="{{ 'Sunday Worship' if current_language == 'en' else '主日崇拜' }}">{{ 'Sunday Worship' if current_language == 'en' else '主日崇拜' }}</option>
+                                    <option value="{{ 'Prayer Meeting' if current_language == 'en' else '祷告会' }}">{{ 'Prayer Meeting' if current_language == 'en' else '祷告会' }}</option>
+                                    <option value="{{ 'English Corner' if current_language == 'en' else '英语角' }}">{{ 'English Corner' if current_language == 'en' else '英语角' }}</option>
+                                    <option value="{{ 'Other' if current_language == 'en' else '其他' }}">{{ 'Other' if current_language == 'en' else '其他' }}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">{{ t('heard_from') }}</label>
+                                <select name="heard_from" class="form-select">
+                                    <option value="">{{ t('optional') }}…</option>
+                                    <option>{{ 'Friend Introduction' if current_language == 'en' else '朋友介绍' }}</option>
+                                    <option>{{ 'Website / Online' if current_language == 'en' else '网站 / 网络' }}</option>
+                                    <option>{{ 'Passing by the church' if current_language == 'en' else '路过教会' }}</option>
+                                    <option>{{ 'Flyer / Newspaper' if current_language == 'en' else '海报 / 传单' }}</option>
+                                    <option>{{ 'Other' if current_language == 'en' else '其他' }}</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">{{ t('notes') }} ({{ t('optional') }})</label>
+                                <textarea name="notes" class="form-control" rows="3" placeholder="{{ 'Anything you would like to tell us?' if current_language == 'en' else '想对我们说些什么？' }}"></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-forest btn-lg rounded-pill px-5 mt-4"><i class="bi bi-send me-2"></i>{{ 'Submit Registration' if current_language == 'en' else '提交登记' }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h5 class="mb-3"><i class="bi bi-people me-2 text-forest"></i>{{ t('my_fellowships') }}</h5>
+                    {% for f in fellowships %}
+                    <div class="mb-3">
+                        <h6 class="mb-0">{{ get_i18n_text(f, 'group_name') }}</h6>
+                        <small class="text-muted d-block">{% if f.meeting_time %}{{ get_i18n_text(f, 'meeting_time') }} · {% endif %}{{ get_i18n_text(f, 'meeting_location') or '' }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="mb-2"><i class="bi bi-envelope me-2 text-forest"></i>{{ 'After Submitting You Will Receive' if current_language == 'en' else '提交后您会收到' }}</h5>
+                    <p class="text-muted small mb-0">{{ 'A welcome email containing church information, fellowship introductions and contacts. Please make sure your email address is correct.' if current_language == 'en' else '一封欢迎邮件，包含教会信息、各团契小组介绍与联系人。请确保邮箱填写正确。' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

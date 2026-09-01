@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Thank You' if current_language == 'en' else '谢谢登记' }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-5 text-center" style="max-width: 720px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-5">
+            <div class="thanks-icon mb-3"><i class="bi bi-check2-circle"></i></div>
+            <h2 class="section-title mb-3">{{ 'Thank You!' if current_language == 'en' else '谢谢您！' }}</h2>
+            <p class="text-muted mb-4">{{ 'We have received your registration' if current_language == 'en' else '我们已经收到您的登记信息' }}{% if visitor_id %} ({{ 'Registration #' if current_language == 'en' else '登记编号 #' }}{{ visitor_id }}){% endif %}.<br>
+            {{ 'Our church staff will contact you soon. You are welcome to join Sunday worship and fellowship gatherings!' if current_language == 'en' else '教会同工会尽快与您联系，欢迎您来参加主日崇拜与团契聚会！' }}</p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="{{ url_for('main.home') }}" class="btn btn-forest rounded-pill px-4">{{ t('home') }}</a>
+                <a href="{{ url_for('main.about') }}" class="btn btn-outline-forest rounded-pill px-4">{{ t('sunday_worship') }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

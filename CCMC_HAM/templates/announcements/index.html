@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ t('announcements_title') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <h3 class="section-title mb-0"><i class="bi bi-megaphone me-2 text-forest"></i>{{ t('announcements_title') }}</h3>
+        {% if session.get('role_id') in [ROLE_ADMIN, ROLE_COORDINATOR] %}
+        <a href="{{ url_for('announcements.create') }}" class="btn btn-forest rounded-pill px-3"><i class="bi bi-plus-lg me-1"></i>{{ t('publish_announcement') }}</a>
+        {% endif %}
+    </div>
+    <div class="row g-4">
+        {% for a in announcements %}
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        {% if a.group_name %}<span class="badge bg-light text-dark border">{{ get_i18n_text(a, 'group_name') }}</span>{% endif %}
+                        <small class="text-muted">{{ a.created_at | date_only }}</small>
+                    </div>
+                    <h5 class="mb-2">{{ get_i18n_text(a, 'title') }}</h5>
+                    <p class="text-muted mb-3">{{ (get_i18n_text(a, 'content') or '')[:220] }}{% if get_i18n_text(a, 'content') and get_i18n_text(a, 'content')|length > 220 %}…{% endif %}</p>
+                    <div class="small text-muted">{{ t('published_by') }}: {{ a.username }}</div>
+                    {% if session.get('role_id') in [ROLE_ADMIN, ROLE_COORDINATOR] %}
+                    <div class="mt-2 d-flex gap-2">
+                        <a href="{{ url_for('announcements.edit', announcement_id=a.announcement_id) }}" class="btn btn-sm btn-outline-forest rounded-pill"><i class="bi bi-pencil me-1"></i>{{ t('edit') }}</a>
+                        <form method="POST" action="{{ url_for('announcements.delete', announcement_id=a.announcement_id) }}" onsubmit="return confirm('{{ t('delete') }}?');">
+                            <button class="btn btn-sm btn-outline-danger rounded-pill"><i class="bi bi-trash me-1"></i>{{ t('delete') }}</button>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center text-muted py-5">{{ t('no_announcements_data') }}</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

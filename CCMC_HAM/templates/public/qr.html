@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ t('registration_qr') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container text-center">
+        <h1 class="page-title">{{ t('registration_qr') }}</h1>
+        <p class="text-white-50 mb-0">{{ 'Scan and fill in the one-minute registration form' if current_language == 'en' else '扫码填写一分钟登记表' }}</p>
+    </div>
+</div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm text-center">
+                <div class="card-body p-5">
+                    {% set form_url = url_for('main.welcome', _external=True) %}
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=280x280&data={{ form_url | urlencode }}" alt="{{ t('registration_qr') }}" class="img-fluid mb-3" style="max-width: 260px;">
+                    <h5>{{ 'Scan to Register as a New Friend' if current_language == 'en' else '扫码登记成为新朋友' }}</h5>
+                    <p class="text-muted small">{{ 'Ushers can project or print this page so new friends can scan with their phones.' if current_language == 'en' else '招待员可将此页面投屏或打印，让新朋友用手机扫码填写。' }}</p>
+                    <div class="alert alert-light border small text-break">{{ form_url }}</div>
+                    <a href="{{ url_for('main.welcome') }}" class="btn btn-forest rounded-pill px-4">{{ 'Open Registration Form' if current_language == 'en' else '直接打开登记表' }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

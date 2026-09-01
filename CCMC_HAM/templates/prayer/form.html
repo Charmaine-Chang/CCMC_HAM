@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ t('prayer_form_title') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-4" style="max-width: 720px;">
+    <h3 class="section-title mb-4"><i class="bi bi-heart me-2 text-forest"></i>{{ t('prayer_form_title') }}</h3>
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4 p-lg-5">
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">{{ t('prayer_title_label') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="title" class="form-control" placeholder="e.g. Pray for my family's health" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{{ t('prayer_content_label') }} <span class="text-danger">*</span></label>
+                    <textarea name="content" class="form-control" rows="5" required></textarea>
+                </div>
+                <div class="form-check form-switch mb-4">
+                    <input class="form-check-input" type="checkbox" name="is_public" id="is_public" checked>
+                    <label class="form-check-label" for="is_public">{{ t('public_prayer') }}</label>
+                </div>
+                <button class="btn btn-forest rounded-pill px-4">{{ t('submit_prayer') }}</button>
+                <a href="{{ url_for('prayer.index') }}" class="btn btn-outline-secondary rounded-pill px-4">{{ t('cancel') }}</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

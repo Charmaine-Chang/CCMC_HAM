@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}{{ t('resource_library') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+{% set cat_labels = {
+    '诗歌': t('resource_hymn'),
+    '经文': t('resource_scripture'),
+    '见证': t('resource_testimony'),
+    '资料': t('resource_material'),
+    '其他': t('resource_other')
+} %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <h3 class="section-title mb-0"><i class="bi bi-book me-2 text-forest"></i>{{ t('resource_library') }}</h3>
+        {% if session.get('role_id') in [ROLE_ADMIN, ROLE_COORDINATOR] %}
+        <a href="{{ url_for('resources.create') }}" class="btn btn-forest rounded-pill px-3"><i class="bi bi-plus-lg me-1"></i>{{ t('new_resource') }}</a>
+        {% endif %}
+    </div>
+    <form method="GET" class="row g-2 mb-4">
+        <div class="col-md-4">
+            <select name="category" class="form-select" onchange="this.form.submit()">
+                <option value="">{{ t('all_categories') }}</option>
+                {% for c in categories %}
+                <option value="{{ c }}" {{ 'selected' if category == c }}>{{ cat_labels.get(c, c) }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <input type="text" name="q" class="form-control" value="{{ query }}" placeholder="{{ t('search') }}…">
+        </div>
+        <div class="col-md-2"><button class="btn btn-outline-forest w-100 rounded-pill">{{ t('search') }}</button></div>
+    </form>
+    <div class="row g-4">
+        {% for r in resources %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 h-100 resource-card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="badge bg-light text-dark border">{{ cat_labels.get(r.category, r.category) }}</span>
+                        {% if r.is_featured %}<i class="bi bi-star-fill text-warning" title="{{ t('is_featured') }}"></i>{% endif %}
+                    </div>
+                    <h5 class="mb-2">{{ get_i18n_text(r, 'title') }}</h5>
+                    <p class="text-muted small mb-3">{{ (get_i18n_text(r, 'content') or '')[:150] }}{% if get_i18n_text(r, 'content') and get_i18n_text(r, 'content')|length > 150 %}…{% endif %}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">@{{ r.username }} · {{ r.created_at | date_only }}</small>
+                        {% if session.get('role_id') in [ROLE_ADMIN, ROLE_COORDINATOR] %}
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('resources.edit', resource_id=r.resource_id) }}" class="btn btn-sm btn-outline-forest rounded-pill"><i class="bi bi-pencil"></i></a>
+                            <form method="POST" action="{{ url_for('resources.delete', resource_id=r.resource_id) }}" onsubmit="return confirm('{{ t('delete') }}?');">
+                                <button class="btn btn-sm btn-outline-danger rounded-pill"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center text-muted py-5">{{ t('no_resources') }}</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ t('contact_us') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container text-center">
+        <h1 class="page-title">{{ t('contact_us') }}</h1>
+        <p class="text-white-50 mb-0">Contact Us</p>
+    </div>
+</div>
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-body p-4">
+                    <h5 class="mb-3">{{ 'Church Contact' if current_language == 'en' else '教会联络' }}</h5>
+                    <p class="mb-2"><i class="bi bi-person me-2 text-forest"></i>{{ get_setting('pastor', '') }}</p>
+                    <p class="mb-2"><i class="bi bi-telephone me-2 text-forest"></i>{{ get_setting('phone', '') }}</p>
+                    <p class="mb-2"><i class="bi bi-envelope me-2 text-forest"></i>{{ get_setting('email', '') }}</p>
+                    <p class="mb-0"><i class="bi bi-geo-alt me-2 text-forest"></i>{{ get_setting('office_address', '') }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-body p-4">
+                    <h5 class="mb-3">{{ 'Want to Know Us?' if current_language == 'en' else '想认识我们？' }}</h5>
+                    <p>{{ 'Please fill in the new friend registration form and we will contact you soon to introduce our church, fellowships and contacts.' if current_language == 'en' else '请填写新朋友登记表，我们会尽快与您联系，为您介绍教会信息、团契小组与联系人。' }}</p>
+                    <a href="{{ url_for('main.welcome') }}" class="btn btn-forest rounded-pill px-4">{{ t('welcome_new_friends') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}{{ t('church_calendar') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <h3 class="mb-0 section-title"><i class="bi bi-calendar3 me-2 text-forest"></i>{{ t('church_calendar') }}</h3>
+        <div class="d-flex gap-2">
+            {% if session.get('role_id') in [ROLE_ADMIN, ROLE_COORDINATOR] %}
+            <a href="{{ url_for('events.create') }}" class="btn btn-forest rounded-pill px-3"><i class="bi bi-plus-lg me-1"></i>{{ t('new_event') }}</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <a href="{{ url_for('events.index', year=prev_month.year, month=prev_month.month) }}" class="btn btn-sm btn-outline-forest rounded-pill"><i class="bi bi-chevron-left"></i></a>
+                    <h5 class="mb-0">{{ year }} {{ 'Year' if current_language == 'en' else '年' }} {{ month }} {{ 'Month' if current_language == 'en' else '月' }}</h5>
+                    <a href="{{ url_for('events.index', year=next_month.year, month=next_month.month) }}" class="btn btn-sm btn-outline-forest rounded-pill"><i class="bi bi-chevron-right"></i></a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table calendar-table mb-0">
+                        <thead>
+                            <tr class="text-center">
+                                <th>{{ 'Mon' if current_language == 'en' else '周一' }}</th>
+                                <th>{{ 'Tue' if current_language == 'en' else '周二' }}</th>
+                                <th>{{ 'Wed' if current_language == 'en' else '周三' }}</th>
+                                <th>{{ 'Thu' if current_language == 'en' else '周四' }}</th>
+                                <th>{{ 'Fri' if current_language == 'en' else '周五' }}</th>
+                                <th>{{ 'Sat' if current_language == 'en' else '周六' }}</th>
+                                <th>{{ 'Sun' if current_language == 'en' else '周日' }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for week in weeks %}
+                            <tr>
+                                {% for day in week %}
+                                <td class="{{ 'muted-day' if day.month != month else '' }} {{ 'today-cell' if day == today }} calendar-cell">
+                                    <div class="day-number">{{ day.day }}</div>
+                                    {% for ev in by_day.get(day.day, [])[:3] %}
+                                    <a href="{{ url_for('events.detail', event_id=ev.event_id) }}" class="calendar-event ev-{{ ev.category }}">{{ get_i18n_text(ev, 'title') | truncate(10) }}</a>
+                                    {% endfor %}
+                                    {% if by_day.get(day.day, [])|length > 3 %}<small class="text-muted">+{{ by_day.get(day.day, [])|length - 3 }}</small>{% endif %}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-stars me-2 text-forest"></i>{{ t('upcoming') }}</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% for ev in upcoming %}
+                    <a href="{{ url_for('events.detail', event_id=ev.event_id) }}" class="text-decoration-none text-dark">
+                        <div class="upcoming-item px-3 py-2">
+                            <div class="fw-semibold small">{{ get_i18n_text(ev, 'title') }}</div>
+                            <div class="small text-muted">{{ ev.start_time.strftime('%m-%d %H:%M') }}{% if ev.location %} · {{ get_i18n_text(ev, 'location') | truncate(20) }}{% endif %}</div>
+                        </div>
+                    </a>
+                    {% else %}
+                    <p class="text-muted small p-3 mb-0">{{ t('no_upcoming_events') }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="card shadow-sm border-0 mt-4">
+                <div class="card-header bg-white"><h5 class="mb-0">{{ t('event_categories') }}</h5></div>
+                <div class="card-body py-3">
+                    <span class="badge ev-worship">{{ category_label('worship') }}</span>
+                    <span class="badge ev-prayer">{{ category_label('prayer') }}</span>
+                    <span class="badge ev-fellowship">{{ category_label('fellowship') }}</span>
+                    <span class="badge ev-outreach">{{ category_label('outreach') }}</span>
+                    <span class="badge ev-ministry">{{ category_label('ministry') }}</span>
+                    <span class="badge ev-special">{{ category_label('special') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

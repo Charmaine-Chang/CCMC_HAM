@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}{{ t('church_settings') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h3 class="section-title mb-4"><i class="bi bi-gear me-2 text-forest"></i>{{ t('church_settings') }}</h3>
+    <form method="POST">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white"><h5 class="mb-0">{{ t('church_info') }}</h5></div>
+                    <div class="card-body">
+                        {% for key, label in [
+                            ('church_name', t('church_name')), ('church_name_en', t('church_name_en')), ('denomination', t('denomination')),
+                            ('pastor', t('pastor')), ('phone', t('phone')), ('email', t('email')), ('office_address', t('office_address')),
+                            ('welcome_message', t('welcome_message')), ('verse_text', t('verse_text')), ('verse_ref', t('verse_ref'))
+                        ] %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ label }}</label>
+                            <input type="text" name="{{ key }}" class="form-control" value="{{ current.get(key, '') }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white"><h5 class="mb-0">{{ t('sunday_worship_settings') }}</h5></div>
+                    <div class="card-body">
+                        {% for key, label in [
+                            ('service_1_name', t('service_1_name')), ('service_1_time', t('service_1_time')), ('service_1_location', t('service_1_location')),
+                            ('service_2_name', t('service_2_name')), ('service_2_time', t('service_2_time')), ('service_2_location', t('service_2_location'))
+                        ] %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ label }}</label>
+                            <input type="text" name="{{ key }}" class="form-control" value="{{ current.get(key, '') }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white"><h5 class="mb-0">{{ t('hero_video') }}</h5></div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">{{ t('video_url') }}</label>
+                            <input type="text" name="hero_video_url" class="form-control" value="{{ current.get('hero_video_url', '') }}" placeholder="{{ t('video_hint') }}">
+                            <div class="form-text">{{ t('video_hint') }}</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ t('youtube_channel') }}</label>
+                            <input type="text" name="youtube_url" class="form-control" value="{{ current.get('youtube_url', '') }}" placeholder="https://www.youtube.com/@YourChurch">
+                            <div class="form-text">{{ t('youtube_hint') }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-white"><h5 class="mb-0">{{ t('smtp') }}</h5></div>
+                    <div class="card-body">
+                        {% for key, label in [
+                            ('smtp_host', t('smtp_host')), ('smtp_port', t('smtp_port')), ('smtp_user', t('smtp_user')),
+                            ('smtp_password', t('smtp_password')), ('smtp_from', t('smtp_from'))
+                        ] %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ label }}</label>
+                            <input type="{{ 'password' if 'password' in key else 'text' }}" name="{{ key }}" class="form-control" value="{{ current.get(key, '') }}">
+                        </div>
+                        {% endfor %}
+                        <div class="form-text">{{ t('youtube_hint') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-forest btn-lg rounded-pill px-5 mt-4"><i class="bi bi-save me-1"></i>{{ t('save_settings') }}</button>
+    </form>
+</div>
+{% endblock %}

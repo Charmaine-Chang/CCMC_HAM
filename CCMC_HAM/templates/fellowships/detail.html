@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}{{ get_i18n_text(group, 'group_name') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <nav class="small mb-3"><a href="{{ url_for('fellowships.index') }}" class="text-decoration-none">{{ t('fellowships') }}</a> <i class="bi bi-chevron-right"></i> <span class="text-muted">{{ get_i18n_text(group, 'group_name') }}</span></nav>
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4 p-lg-5">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                <div>
+                    <span class="badge bg-light text-dark border mb-2">{{ group_type_label(group.group_type) }}</span>
+                    <h2 class="mb-2">{{ get_i18n_text(group, 'group_name') }}</h2>
+                    <div class="text-muted mb-3">
+                        {% if group.meeting_time %}<p class="mb-1"><i class="bi bi-clock me-2"></i>{{ get_i18n_text(group, 'meeting_time') }}</p>{% endif %}
+                        {% if group.meeting_location %}<p class="mb-1"><i class="bi bi-geo-alt me-2"></i>{{ get_i18n_text(group, 'meeting_location') }}</p>{% endif %}
+                        {% if group.contact_phone %}<p class="mb-1"><i class="bi bi-telephone me-2"></i>{{ group.contact_phone }}</p>{% endif %}
+                        {% if group.leader_first or group.leader_last %}<p class="mb-1"><i class="bi bi-person me-2"></i>{{ t('leader') }}: {{ group.leader_first or '' }}{{ group.leader_last or '' }}{% if group.leader_phone %} · {{ group.leader_phone }}{% endif %}</p>{% endif %}
+                    </div>
+                    <p>{{ get_i18n_text(group, 'description') or t('no_data') }}</p>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    {% if session.get('role_id') in [ROLE_ADMIN, ROLE_COORDINATOR] %}
+                    <a href="{{ url_for('fellowships.edit', group_id=group.group_id) }}" class="btn btn-outline-forest rounded-pill px-3"><i class="bi bi-pencil me-1"></i>{{ t('edit_info') }}</a>
+                    {% endif %}
+                    {% if is_member %}
+                    <form method="POST" action="{{ url_for('fellowships.leave', group_id=group.group_id) }}" onsubmit="return confirm('{{ t('leave_confirm') }}');">
+                        <button class="btn btn-outline-secondary rounded-pill px-3 w-100">{{ t('leave_group') }}</button>
+                    </form>
+                    {% else %}
+                    <form method="POST" action="{{ url_for('fellowships.join', group_id=group.group_id) }}">
+                        <button class="btn btn-forest rounded-pill px-4 w-100"><i class="bi bi-person-plus me-1"></i>{{ t('join_group') }}</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white"><h5 class="mb-0">{{ t('members') }} ({{ members|length }})</h5></div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="table-light"><tr><th>{{ t('name') }}</th><th>{{ t('role') }}</th><th>{{ t('contact_info') }}</th></tr></thead>
+                        <tbody>
+                            {% for m in members %}
+                            <tr>
+                                <td class="fw-semibold">{{ m.first_name or '' }}{{ m.last_name or '' }}</td>
+                                <td>{% if m.is_leader %}<span class="badge bg-forest">{{ t('leader') }}</span>{% else %}<span class="badge bg-light text-dark border">{{ t('member') }}</span>{% endif %}</td>
+                                <td class="small text-muted">{% if m.phone %}{{ m.phone }}{% endif %}{% if m.email %}<div>{{ m.email }}</div>{% endif %}</td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="3" class="text-center text-muted py-4">{{ t('no_members') }}</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white"><h5 class="mb-0">{{ t('recent_events') }}</h5></div>
+                <div class="card-body">
+                    {% for ev in events %}
+                    <div class="dashboard-item">
+                        <a href="{{ url_for('events.detail', event_id=ev.event_id) }}" class="fw-semibold text-decoration-none text-dark">{{ get_i18n_text(ev, 'title') }}</a>
+                        <div class="small text-muted">{{ ev.start_time | date_nz('%Y-%m-%d %H:%M') }}{% if ev.location %} · {{ ev.location }}{% endif %}</div>
+                    </div>
+                    {% else %}
+                    <p class="text-muted small mb-0">{{ t('no_upcoming_events') }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% if session.get('role_id') in [ROLE_ADMIN, ROLE_COORDINATOR] %}
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white"><h5 class="mb-0">{{ t('add_member') }}</h5></div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('fellowships.manage_membership', group_id=group.group_id) }}" class="d-flex gap-2 flex-wrap">
+                        <input type="hidden" name="action" value="add">
+                        <select name="user_id" class="form-select" required>
+                            {% for u in all_users %}
+                            <option value="{{ u.user_id }}">{{ u.first_name or '' }}{{ u.last_name or '' }} (@{{ u.username }})</option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-check align-self-center">
+                            <input class="form-check-input" type="checkbox" name="is_leader" id="is_leader" value="1">
+                            <label class="form-check-label small" for="is_leader">{{ t('set_as_leader') }}</label>
+                        </div>
+                        <button class="btn btn-sm btn-forest rounded-pill px-3">{{ t('add') }}</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

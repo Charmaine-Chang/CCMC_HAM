@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ t('edit_info') if group else t('new_group') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-4" style="max-width: 780px;">
+    <h3 class="section-title mb-4">{{ t('edit_info') if group else t('new_group') }}</h3>
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4 p-lg-5">
+            <form method="POST">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-7">
+                        <label class="form-label">{{ t('group_name') }} <span class="text-danger">*</span></label>
+                        <input type="text" name="group_name" class="form-control" value="{{ group.group_name if group else '' }}" required>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label">{{ t('group_type') }}</label>
+                        <select name="group_type" class="form-select">
+                            {% for value, label in group_types %}
+                            <option value="{{ value }}" {{ 'selected' if group and group.group_type == value }}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ t('meeting_time') }}</label>
+                        <input type="text" name="meeting_time" class="form-control" value="{{ group.meeting_time if group else '' }}" placeholder="e.g. Friday 7:30 PM">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ t('meeting_location') }}</label>
+                        <input type="text" name="meeting_location" class="form-control" value="{{ group.meeting_location if group else '' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ t('contact_phone') }}</label>
+                        <input type="text" name="contact_phone" class="form-control" value="{{ group.contact_phone if group else '' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ t('leader') }}</label>
+                        <select name="leader_user_id" class="form-select">
+                            <option value="">{{ t('none') }}</option>
+                            {% for u in users %}
+                            <option value="{{ u.user_id }}" {{ 'selected' if group and group.leader_user_id == u.user_id }}>{{ u.first_name or '' }}{{ u.last_name or '' }} (@{{ u.username }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ t('visibility') }}</label>
+                        <select name="visibility" class="form-select">
+                            <option value="public" {{ 'selected' if group and group.visibility == 'public' }}>{{ t('public') }} ({{ t('public') }})</option>
+                            <option value="private" {{ 'selected' if group and group.visibility == 'private' }}>{{ t('private') }} ({{ t('private') }})</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">{{ t('description') }}</label>
+                        <textarea name="description" class="form-control" rows="4">{{ group.description if group else '' }}</textarea>
+                    </div>
+                </div>
+                <button class="btn btn-forest rounded-pill px-4">{{ t('save') }}</button>
+                <a href="{{ url_for('fellowships.index') }}" class="btn btn-outline-secondary rounded-pill px-4">{{ t('cancel') }}</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

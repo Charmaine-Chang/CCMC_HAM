@@ -1,0 +1,17 @@
+{% macro status_badge(status, mapping) %}
+{% set cls = {
+  'new': 'bg-info', 'contacted': 'bg-warning text-dark', 'joined': 'bg-success', 'declined': 'bg-secondary',
+  'pending': 'bg-warning text-dark', 'confirmed': 'bg-success', 'completed': 'bg-secondary',
+  'praying': 'bg-primary', 'answered': 'bg-success'
+}.get(status, 'bg-secondary') %}
+<span class="badge {{ cls }}">{{ mapping.get(status, status) }}</span>
+{% endmacro %}
+
+{% macro category_label(category) %}
+{% set labels = {
+  'worship': '主日崇拜', 'prayer': '祷告会', 'fellowship': '团契聚会', 'outreach': '外展布道',
+  'ministry': '事工活动', 'special': '特别聚会', 'other': '其他'
+} %}
+{{ labels.get(category, category) }}
+{% endmacro %}
+

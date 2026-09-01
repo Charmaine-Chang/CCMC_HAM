@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ t('login_title') }} – {{ get_setting('church_name', '漢美頓懷恩堂') }}{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-lg-5">
+                    <div class="text-center mb-4">
+                        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Logo" height="56" class="mb-2">
+                        <h4 class="mb-1">{{ t('church_management_system') }}</h4>
+                        <p class="text-muted small mb-0">{{ get_setting('church_name', '漢美頓懷恩堂') }}</p>
+                    </div>
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">{{ t('username') }}</label>
+                            <input type="text" name="username" class="form-control form-control-lg" value="{{ prefilled_username or '' }}" required autofocus>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">{{ t('password') }}</label>
+                            <input type="password" name="password" class="form-control form-control-lg" required>
+                        </div>
+                        <button class="btn btn-forest w-100 btn-lg rounded-pill fw-bold">{{ t('login') }}</button>
+                    </form>
+                    <p class="text-center text-muted small mt-4 mb-0">{{ t('no_account_register') }}<a href="{{ url_for('auth.register') }}">{{ t('register_as_member') }}</a></p>
+                    <hr>
+                    <div class="text-center small text-muted">
+                        <p class="mb-1">{{ t('demo_accounts_note') }}</p>
+                        <p class="mb-0">admin ({{ t('admin') }}) · coord_chen ({{ t('coordinator') }}) · op_lin ({{ t('operator') }}) · member_wang ({{ t('member') }})</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
