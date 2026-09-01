@@ -1,31 +1,30 @@
 # Render Blueprint (https://render.com/docs/blueprint-spec)
 # 1. Push this repository to GitHub.
 # 2. In Render: New -> Blueprint -> connect this repo.
-# 3. Fill in the secret values (DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_SSL_CA)
-#    or set them in the service's Environment tab after creation.
+# 3. Only DB_PASSWORD needs to be filled in (set it in the service's Environment tab
+#    or when prompted by the Blueprint). All other values are already provided below.
 services:
   - type: web
     name: ccmc-ham
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
-    startCommand: gunicorn --bind 0.0.0.0:${PORT:-8000} app:app
     envVars:
       - key: SECRET_KEY
         generateValue: true
       - key: FLASK_DEBUG
         value: "0"
       - key: DB_USER
-        sync: false
+        value: "46bvyhzGfnadm6Q.root"
       - key: DB_PASSWORD
         sync: false
       - key: DB_HOST
-        sync: false
+        value: "gateway01.ap-southeast-1.prod.aws.tidbcloud.com"
       - key: DB_PORT
         value: "4000"
       - key: DB_NAME
-        sync: false
+        value: "ccmc_ham"
       - key: DB_SSL
         value: "1"
       - key: DB_SSL_CA
-        sync: false
+        value: "/etc/ssl/certs/tidbcloud-cacert.pem"

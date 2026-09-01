@@ -176,7 +176,7 @@ optional `DB_SSL` / `DB_SSL_CA`), so it can be deployed to any container host.
 
 1. Sign up at https://render.com using **GitHub** login.
 2. **New - Blueprint** - select this repository. Render reads `render.yaml` and creates the service.
-3. Fill in the secret environment variables (or set them in the service's **Environment** tab after creation).
+3. Only **`DB_PASSWORD`** needs to be entered (either when prompted or in the service's **Environment** tab after creation). All other variables are preconfigured in `render.yaml`, and the TLS CA bundle is baked into the Docker image at `/etc/ssl/certs/tidbcloud-cacert.pem`.
 
 | Variable | Example | Notes |
 |---|---|---|
@@ -186,7 +186,7 @@ optional `DB_SSL` / `DB_SSL_CA`), so it can be deployed to any container host.
 | `DB_USER` | `root` | Database user |
 | `DB_PASSWORD` | `******` | Database password |
 | `DB_SSL` | `1` | Enable TLS |
-| `DB_SSL_CA` | `/etc/ssl/certs/ca.pem` | Path to the CA certificate inside the container |
+| `DB_SSL_CA` | `/etc/ssl/certs/tidbcloud-cacert.pem` | CA bundle baked into the Docker image (public Mozilla roots) |
 
 ### 3. Import schema and seed data
 

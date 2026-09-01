@@ -11,7 +11,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+# Public Mozilla CA bundle for TLS database connections (TiDB Cloud Serverless).
+COPY deploy/cacert.pem /etc/ssl/certs/tidbcloud-cacert.pem
+
 EXPOSE 8000
 
-# Render overrides the command via startCommand; this is the fallback for local runs.
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app:app"]
+# Render injects $PORT for the container; default to 8000 for local Docker runs.
+CMD gunicorn --bind 0.0.0.0:${PORT:-8000} app:app
