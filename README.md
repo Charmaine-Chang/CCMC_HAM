@@ -6,10 +6,20 @@
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 ![CI](https://github.com/Charmaine-Chang/CCMC_HAM/actions/workflows/ci.yml/badge.svg)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-online-brightgreen)](https://ccmc-ham.onrender.com)
 
 **Hamilton Chinese Methodist Church (漢美頓懷恩堂) Church Management System**
 
 A full-stack church management platform built with **Flask + MySQL**. It covers authentication, role-based access control (RBAC), fellowships, dashboards, announcements, a resource library, plus church-specific features such as a video homepage, calendar, event promotion, visitor registration, prayer requests, attendance records, ministry rosters, and statistical reports.
+
+---
+## 🚀 Live Demo
+
+**https://ccmc-ham.onrender.com**
+
+Try the running application now. Log in with `admin` / `Password123!`; other demo accounts are listed under Quick Start.
+
+> Free-tier hosting note: the service sleeps after ~15 minutes of inactivity and takes 30-60 seconds to wake up on the next visit.
 
 ---
 
