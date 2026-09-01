@@ -69,7 +69,7 @@ def send_visitor_welcome(email_to, visitor_name, settings, fellowships):
     body = "\n".join(lines)
     msg = MIMEText(body, 'plain', 'utf-8')
     msg['Subject'] = Header(f"欢迎来到 {church_name}", 'utf-8')
-    msg['From'] = settings_value(settings, 'smtp_from', 'noreply@hcmc.nz')
+    msg['From'] = settings_value(settings, 'smtp_from', 'noreply@example.com')
     msg['To'] = email_to
 
     if not smtp_host:
