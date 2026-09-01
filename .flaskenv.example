@@ -1,0 +1,11 @@
+# Copy to .flaskenv and adjust as needed.
+FLASK_APP=app.py
+FLASK_DEBUG=1
+FLASK_RUN_PORT=5005
+
+# Database overrides (optional; defaults come from CCMC_HAM/connect_local.py)
+# DB_USER=root
+# DB_PASSWORD=your-password
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_NAME=ccmc_ham
