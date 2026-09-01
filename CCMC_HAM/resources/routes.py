@@ -1,4 +1,4 @@
-﻿import logging
+import logging
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from CCMC_HAM.db import get_db, get_cursor
 from CCMC_HAM.shared.decorators import login_required, staff_required

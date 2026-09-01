@@ -1,4 +1,4 @@
-﻿"""CCMC Hamilton 教会管理系统 - 冒烟测试
+"""CCMC Hamilton 教会管理系统 - 冒烟测试
 用法: python scripts/smoke_test.py
 需要先运行 sql/ccmc_create_database.sql 与 sql/ccmc_populate_database.sql。
 """

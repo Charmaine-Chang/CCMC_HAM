@@ -1,4 +1,4 @@
-﻿import csv
+import csv
 import io
 import logging
 from CCMC_HAM.i18n import get_locale

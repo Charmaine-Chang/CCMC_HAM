@@ -1,4 +1,4 @@
-﻿import logging
+import logging
 from CCMC_HAM.i18n import get_locale
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from CCMC_HAM.db import get_db, get_cursor

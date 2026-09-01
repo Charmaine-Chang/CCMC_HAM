@@ -1,4 +1,4 @@
-﻿from CCMC_HAM import bcrypt
+from CCMC_HAM import bcrypt
 from CCMC_HAM.db import get_db, get_cursor_context, IntegrityError, DatabaseError
 from CCMC_HAM.constants import ROLE_MEMBER
 def _svc_msg(key, **kwargs):

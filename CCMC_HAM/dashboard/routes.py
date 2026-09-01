@@ -1,4 +1,4 @@
-﻿import logging
+import logging
 from datetime import date
 from flask import Blueprint, render_template, session
 from CCMC_HAM.db import get_cursor
