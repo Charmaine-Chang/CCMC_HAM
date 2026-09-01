@@ -1,10 +1,40 @@
 # CCMC_HAM Church Management System
 
+![Python](https://img.shields.io/badge/Python-3.13-blue)
+![Flask](https://img.shields.io/badge/Flask-3.1-000000)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+![CI](https://github.com/Charmaine-Chang/CCMC_HAM/actions/workflows/ci.yml/badge.svg)
+
 **Hamilton Chinese Methodist Church (漢美頓懷恩堂) Church Management System**
 
-Project codename **CCMC_HAM** is a church management platform built on Flask + MySQL. It includes core mechanisms such as **authentication, role-based access control (RBAC), fellowships, dashboards, announcements, and a resource library**, plus church-specific features such as a **video homepage, calendar, event promotion, visitor registration, prayer requests, attendance records, ministry rosters, and statistical reports**.
+A full-stack church management platform built with **Flask + MySQL**. It covers authentication, role-based access control (RBAC), fellowships, dashboards, announcements, a resource library, plus church-specific features such as a video homepage, calendar, event promotion, visitor registration, prayer requests, attendance records, ministry rosters, and statistical reports.
 
-> This repository contains only the CCMC_HAM church management system; all content unrelated to the original conservation project has been removed.
+---
+
+## Highlights
+
+- **Full-stack Flask application** with 14 feature modules organised as Blueprints (auth, dashboard, events, announcements, prayer, visitors, attendance, rosters, fellowships, resources, reports, admin).
+- **Custom RBAC** with 4 roles (System Admin / Deacon / Service Staff / Member), enforced server-side by reusable decorators.
+- **Bilingual UI** (Traditional Chinese / English) powered by Flask-Babel, with automatic language detection and per-user language persistence.
+- **Automated smoke test** covering public pages, role permissions, and CRUD flows; runs in **GitHub Actions CI** against a MySQL 8.0 service container.
+- **12-factor friendly configuration**: database settings and secrets are read from environment variables, with a gitignored local override file (`connect_local.py`) and a committed example template.
+- **Clean, dependency-pinned** `requirements.txt`, MIT-licensed.
+
+---
+
+## Screenshots
+
+Public homepage | Visitor registration | Admin dashboard
+:---:|:---:|:---:
+![Home](docs/screenshots/home.png) | ![Welcome](docs/screenshots/welcome.png) | ![Dashboard](docs/screenshots/dashboard.png)
+
+Calendar | Visitor management | Statistical reports
+:---:|:---:|:---:
+![Events](docs/screenshots/events.png) | ![Visitors](docs/screenshots/visitors.png) | ![Reports](docs/screenshots/reports.png)
+
+> Screenshots can be regenerated with `python scripts/capture_screenshots.py` (requires `playwright` from `requirements-dev.txt`).
 
 ---
 
@@ -16,14 +46,16 @@ Project codename **CCMC_HAM** is a church management platform built on Flask + M
 | Database | MySQL 8.0, PyMySQL |
 | Frontend | Jinja2, Bootstrap 5, Vanilla JS, Chart.js (reports) |
 | Authentication | Flask-BCrypt, custom RBAC decorators |
+| i18n | Flask-Babel (Traditional Chinese / English) |
 | Email | smtplib (visitor welcome emails, configurable SMTP) |
+| CI | GitHub Actions (MySQL 8 service + smoke test) |
 
 ---
 
 ## Features
 
 ### Public Portal (no login required)
-- **Video homepage**: full-screen video hero in the style of ccmc.nz (supports MP4 / YouTube links; changeable under "Church Settings" in the admin panel)
+- **Video homepage**: full-screen video hero (supports MP4 / YouTube links; changeable under "Church Settings" in the admin panel)
 - Church info, Sunday services (times and locations of two services), fellowship life, ministry activities
 - Upcoming public event calendar, church announcements, public prayer wall
 - **Visitor registration**: online form + on-site QR code page; automatically sends a welcome email (including church info, fellowship introductions, and contacts) after registration
@@ -67,7 +99,12 @@ pip install -r requirements.txt
 
 ### 2. Configure MySQL
 
-Edit `CCMC_HAM/connect_local.py` and fill in your local MySQL username and password:
+Copy the example config and fill in your local MySQL username and password:
+
+```bash
+copy CCMC_HAM\connect_local.example.py CCMC_HAM\connect_local.py   # Windows
+cp CCMC_HAM/connect_local.example.py CCMC_HAM/connect_local.py     # macOS / Linux
+```
 
 ```python
 dbuser = "root"
@@ -77,12 +114,20 @@ dbport = 3306
 dbname = "ccmc_ham"
 ```
 
+> `connect_local.py` is gitignored. Alternatively, set the `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, and `DB_NAME` environment variables.
+
 Create the database and import the schema and seed data (skip if already imported):
 
 ```bash
 mysql -u root -p -e "CREATE DATABASE ccmc_ham CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 mysql -u root -p --default-character-set=utf8mb4 ccmc_ham < sql/ccmc_create_database.sql
 mysql -u root -p --default-character-set=utf8mb4 ccmc_ham < sql/ccmc_populate_database.sql
+```
+
+Or use the included setup script (reads the same environment variables):
+
+```bash
+python scripts/setup_db.py
 ```
 
 ### 3. Run
@@ -110,7 +155,7 @@ Open http://127.0.0.1:5005
 python scripts/smoke_test.py    # Smoke test: public pages + role permissions + CRUD flows
 ```
 
-Data created during the test can be cleaned up with `scripts/cleanup_smoke.sql`, or you can simply re-import the seed data to restore the initial state.
+Data created during the test can be cleaned up with `scripts/cleanup_smoke.sql`, or you can simply re-import the seed data to restore the initial state. The same smoke test runs automatically in GitHub Actions on every push to `main` and on pull requests.
 
 ---
 
@@ -134,5 +179,13 @@ CCMC_HAM/                 # Church management system (main project package)
   shared/                 # RBAC decorators, etc.
   templates/ static/      # Templates and frontend assets
 sql/ccmc_*.sql            # Database schema and seed data
-scripts/                  # Smoke test and cleanup scripts
+scripts/                  # Smoke test, DB setup, and screenshot utilities
+docs/screenshots/         # README screenshots
+.github/workflows/ci.yml  # GitHub Actions CI
 ```
+
+---
+
+## License
+
+[MIT](LICENSE)
